@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import {
-  ArrowRight, CalendarDays, ChevronRight, Clock3, MapPin,
+  ArrowLeft, ArrowRight, CalendarDays, ChevronRight, Clock3, MapPin,
   Menu as MenuIcon, Phone, Search, UtensilsCrossed, X
 } from 'lucide-react'
 
@@ -12,10 +12,10 @@ const INSTAGRAM = 'https://www.instagram.com/mariagerminatapa/'
 
 type Dish = {
   name: string
-  category: string
-  description: string
+  category?: string
+  description?: string
   price?: string
-  image: string
+  image?: string
   tags?: string[]
 }
 
@@ -33,6 +33,83 @@ const dishes: Dish[] = [
   { name: 'Fingers de pollo en tandori', category: 'Fritos', description: 'Fingers de pollo con preparación tandori.', image: '/images/photo-2.jpg' },
   { name: 'Plato con tofu', category: 'Opciones vegetales', description: 'Opción vegetal con tofu. Consulta disponibilidad e ingredientes al personal.', image: '/images/photo-3.jpg', tags: ['Vegetal'] },
 ]
+
+const cartaCategories = [
+  'Germinitos',
+  'Algo ligero',
+  'Más de lo nuestro',
+  'De la freidora',
+  'Vegano',
+  'Carnívoros',
+  'Toke dulce',
+  'Bebidas',
+  'Hablamos de vinos',
+  'Infantil',
+  'Montaditos',
+] as const
+
+const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
+  Germinitos: [
+    { name: 'Ensalada Tropical', description: 'Ensalada tropical con aguacate y mango.', price: '9,95 €', image: '/images/photo-1.jpg' },
+    { name: 'Ensaladilla del Chef', description: 'Ensaladilla del Chef.', price: 'T 3,95 € · R 7,50 €', image: '/images/photo-1.jpg' },
+  ],
+  'Algo ligero': [
+    { name: 'Ensalada César', description: 'Ensalada César con pollo crujiente y virutas de parmesano.', price: 'T 5,50 € · R 9,95 €' },
+    { name: 'Tartar de Atún Fresco', description: 'Tartar de atún fresco con daditos de mango y aguacate.', price: '5,95 €' },
+  ],
+  'Más de lo nuestro': [
+    { name: 'Langostinos al ajillo con huevo de codorniz', description: 'Langostinos al ajillo con huevo de codorniz.', price: 'T 3,95 € · R 8,50 €', image: '/images/3.jpg', tags: ['Especialidad'] },
+    { name: 'Tataki de Atún', description: 'Tataki de atún con coulis de soja y algas wakame.', price: '7,95 €', image: '/images/photo-5.jpg', tags: ['Especialidad'] },
+    { name: 'Pata de pulpo', description: 'Pata de pulpo trenzada con pimentón y suave de patata.', price: 'T 4,95 € · R 8,95 €' },
+  ],
+  'De la freidora': [
+    { name: 'Tortillita de camarones de Sanlúcar', price: '3,95 €/ud', image: '/images/1.jpg' },
+    { name: 'Croquetas de puchero', description: 'Croquetas de puchero, de cola de toro, chipirón en su tinta y jamón.', price: 'T 3,95 € · R 9,00 €', image: '/images/photo-1.jpg' },
+    { name: 'Croquetas de bacalao', description: 'Croquetas de bacalao.', price: 'T 3,95 € · R 9,00 €' },
+    { name: 'Pavías de merluza XXL', description: 'Pavías de merluza XXL.', price: '5,95 €/ud · R 7,50 €', image: '/images/1.jpg', tags: ['Especialidad'] },
+    { name: 'Patatas Braviolis', description: 'Patatas Braviolis con bravas y salsa de mostaza.', price: 'T 3,95 € · R 7,50 €', image: '/images/2.jpg' },
+  ],
+  Vegano: [
+    { name: 'Tartar de tofu', description: 'Tartar de tofu con mango y aguacate.', price: '5,95 €' },
+    { name: 'Falafel Burger Vegano', description: 'Falafel burger vegano 100%.', price: '6,50 €' },
+    { name: 'Noodles con verduras', description: 'Noodles con verduras.', price: '6,25 €' },
+  ],
+  Carnívoros: [
+    { name: 'Chuleta vaca madurada', description: 'Chuleta de vaca madurada 25 días. 350 g aprox.', price: '16,95 €' },
+    { name: 'Serrano del Chef', description: 'Serrano del Chef con huevo, jamón o lomo.', price: '7,95 €', image: '/images/photo-2.jpg' },
+    { name: 'Hamburguesa de vacuno', description: 'Hamburguesa de vacuno.', price: '10,50 €', image: '/images/photo-3.jpg' },
+    { name: 'Mini burger angus completa', description: 'Mini burger Angus completa.', price: '3,75 €' },
+  ],
+  'Toke dulce': [
+    { name: 'Coulant', description: 'Coulant caliente de corazón líquido.', price: '4,50 €' },
+    { name: 'Brownie', description: 'Brownie casero con helado de vainilla.', price: '3,75 €' },
+    { name: 'Tarta Milka', description: 'Tarta Milka con helado de vainilla y dulce de leche.', price: '4,95 €' },
+    { name: 'Tarta de chocolate', description: 'Tarta de chocolate con helado de vainilla.', price: '4,95 €' },
+  ],
+  Bebidas: [
+    { name: 'Cerveza Cruz Campo', price: '1,00 €' },
+    { name: 'Cerveza Cruzcampo Sin', price: '1,00 €' },
+    { name: 'Cerveza Radler', price: '1,20 €' },
+    { name: 'Cerveza en copa', price: '1,50 €' },
+    { name: 'Tónica Schweppes', price: '1,50 €' },
+    { name: 'Refrescos', price: '1,50 €' },
+  ],
+  'Hablamos de vinos': [
+    { name: 'Vino Ribera Protos Roble', price: 'Copa 2,30 € · Botella 12,00 €' },
+    { name: 'Vino Ribera Finca Resalso', price: 'Copa 2,35 € · Botella 12,00 €' },
+    { name: 'Vino Rioja Mtg. Psýtera Joven', price: 'Copa 2,00 € · Botella 10,00 €' },
+    { name: 'Vino Rioja Azpilicueta', price: 'Copa 2,40 € · Botella 12,00 €' },
+    { name: 'Vino Blanco Verdejo Vilera', price: 'Copa 2,10 € · Botella 10,00 €' },
+    { name: 'Vino Blanco Sauvignon ÁraBe', price: 'Copa 2,40 € · Botella 12,00 €' },
+  ],
+  Infantil: [
+    { name: 'Solomillo de pollo crujiente con patatas', price: '3,75 €' },
+    { name: 'Tapa de croquetas', price: '3,95 €' },
+  ],
+  Montaditos: [
+    { name: 'Montadito de Crustáceo', price: 'Precio pendiente de confirmar' },
+  ],
+}
 
 const favorites = [
   { name: 'Pavías de merluza XXL', image: '/images/1.jpg', className: 'dish-pavias' },
@@ -53,6 +130,10 @@ export default function App() {
   const [selectedDish, setSelectedDish] = useState<Dish | null>(null)
   const [notice, setNotice] = useState('')
   const [preparedRequest, setPreparedRequest] = useState('')
+  const [cartaCategory, setCartaCategory] = useState<(typeof cartaCategories)[number]>('Germinitos')
+  const [cartaIndex, setCartaIndex] = useState(0)
+  const [introVisible, setIntroVisible] = useState(true)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
   const reduceMotion = useReducedMotion()
 
   useEffect(() => {
@@ -63,8 +144,25 @@ export default function App() {
     }
   }, [])
 
+  useEffect(() => {
+    if (!window.location.pathname.startsWith('/carta')) return
+    if (reduceMotion || sessionStorage.getItem('mg-carta-intro-seen') === '1') {
+      setIntroVisible(false)
+      return
+    }
+    const timer = window.setTimeout(() => {
+      sessionStorage.setItem('mg-carta-intro-seen', '1')
+      setIntroVisible(false)
+    }, 4000)
+    return () => window.clearTimeout(timer)
+  }, [reduceMotion])
+
+  useEffect(() => {
+    setCartaIndex(0)
+  }, [cartaCategory])
+
   const categories = useMemo(
-    () => ['Todas', ...Array.from(new Set(dishes.map((dish) => dish.category)))],
+    () => ['Todas', ...Array.from(new Set(dishes.map((dish) => dish.category || 'Otras')))],
     [],
   )
 
@@ -94,41 +192,124 @@ export default function App() {
 
   const isCartaRoute = typeof window !== 'undefined' && window.location.pathname.startsWith('/carta')
   if (isCartaRoute) {
+    const cartaDishes = cartaSections[cartaCategory]
+    const activeDish = cartaDishes[cartaIndex] || cartaDishes[0]
+    const changeDish = (direction: number) => {
+      setCartaIndex((current) => (current + direction + cartaDishes.length) % cartaDishes.length)
+    }
+    const skipIntro = () => {
+      sessionStorage.setItem('mg-carta-intro-seen', '1')
+      setIntroVisible(false)
+    }
+
     return (
       <>
+        {introVisible && (
+          <div className="carta-intro" aria-label="Presentación de María Germiná">
+            <div className="carta-intro-light" />
+            <motion.img
+              className="carta-intro-logo"
+              src="/images/logo-maria-germina.jpg"
+              alt="María Germiná Tapas"
+              initial={reduceMotion ? false : { opacity: 0, scale: .92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: .8 }}
+            />
+            <motion.p
+              initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: .7, duration: .6 }}
+            >
+              MARÍA GERMINÁ · SEVILLA ESTE
+            </motion.p>
+            <button type="button" onClick={skipIntro}>Ver carta</button>
+          </div>
+        )}
         <header className="qr-header">
           <a className="brand" href="/" aria-label="Volver al inicio">
-            <span className="brand-mark">MG</span>
+            <img className="carta-brand-logo" src="/images/logo-maria-germina-192.jpg" alt="" />
             <span><strong>MARÍA GERMINÁ</strong><small>CARTA DIGITAL</small></span>
           </a>
           <a className="nav-reserve" href={PHONE_LINK}><Phone size={17} /> Llamar</a>
         </header>
         <main className="qr-menu">
           <div className="section-heading">
-            <div><p className="eyebrow">CARTA DIGITAL</p><h2>NUESTROS FAVORITOS</h2></div>
-            <p>Precios e información pendientes de confirmar con el restaurante.</p>
+            <div><p className="eyebrow">CARTA DIGITAL</p><h2>ELIGE TU TENTACIÓN</h2></div>
+            <p>Carta tomada de las imágenes oficiales disponibles. Precios o textos ilegibles quedan pendientes de confirmar.</p>
           </div>
-          <div className="menu-tools">
+          <div className="menu-tools carta-tools">
             <label className="search-box"><Search size={18} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar en la carta" /></label>
             <div className="category-list">
-              {categories.map((item) => <button key={item} className={category === item ? 'active' : ''} onClick={() => setCategory(item)}>{item}</button>)}
+              {cartaCategories.map((item) => (
+                <button key={item} className={cartaCategory === item ? 'active' : ''} onClick={() => setCartaCategory(item)}>{item}</button>
+              ))}
             </div>
           </div>
-          <div className="dish-grid">
-            {filteredDishes.map((dish) => (
-              <button className="dish-card" key={dish.name} onClick={() => setSelectedDish(dish)}>
-                <div className="dish-image"><img src={dish.image} alt={dish.name} />{dish.tags?.map((tag) => <span key={tag}>{tag}</span>)}</div>
-                <div className="dish-card-copy"><small>{dish.category}</small><h3>{dish.name}</h3><p>{dish.description}</p><strong>{dish.price || 'Precio por confirmar'}</strong></div>
-              </button>
-            ))}
-          </div>
-          <p className="verification-note">Las fotografías son material de referencia y deben validarse antes de publicar. Consulta alérgenos e ingredientes con el personal.</p>
+          <section
+            className="carta-3d"
+            onTouchStart={(event) => setTouchStart(event.touches[0].clientX)}
+            onTouchEnd={(event) => {
+              if (touchStart === null) return
+              const difference = event.changedTouches[0].clientX - touchStart
+              if (Math.abs(difference) > 45) changeDish(difference > 0 ? -1 : 1)
+              setTouchStart(null)
+            }}
+          >
+            <button className="carta-arrow carta-arrow-left" type="button" onClick={() => changeDish(-1)} aria-label="Plato anterior"><ArrowLeft /></button>
+            <div className="carta-carousel" aria-live="polite">
+              {cartaDishes.map((dish, index) => {
+                const offset = index - cartaIndex
+                const wrappedOffset =
+                  offset > cartaDishes.length / 2 ? offset - cartaDishes.length :
+                  offset < -cartaDishes.length / 2 ? offset + cartaDishes.length : offset
+                return (
+                  <motion.button
+                    type="button"
+                    key={dish.name}
+                    className={`carta-plate ${wrappedOffset === 0 ? 'active' : ''}`}
+                    onClick={() => setCartaIndex(index)}
+                    animate={{
+                      x: wrappedOffset * (window.innerWidth < 760 ? 155 : 280),
+                      scale: wrappedOffset === 0 ? 1 : .72,
+                      opacity: Math.abs(wrappedOffset) > 1 ? 0 : .72,
+                      rotateY: wrappedOffset * -16,
+                      zIndex: 10 - Math.abs(wrappedOffset),
+                    }}
+                    transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+                  >
+                    {dish.image ? (
+                      <img src={dish.image} alt={dish.name} />
+                    ) : (
+                      <div className="carta-typographic-plate"><UtensilsCrossed size={32} /><span>{dish.category}</span></div>
+                    )}
+                    <span className="carta-plate-name">{dish.name}</span>
+                  </motion.button>
+                )
+              })}
+            </div>
+            <button className="carta-arrow carta-arrow-right" type="button" onClick={() => changeDish(1)} aria-label="Plato siguiente"><ArrowRight /></button>
+          </section>
+          {activeDish && (
+            <motion.article className="carta-detail" key={activeDish.name} initial={reduceMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+              <div>
+                <p className="eyebrow">{cartaCategory}</p>
+                <h2>{activeDish.name}</h2>
+                {activeDish.description && <p>{activeDish.description}</p>}
+              </div>
+              <strong>{activeDish.price || 'Precio pendiente de confirmar'}</strong>
+              {activeDish.tags?.map((tag) => <span className="carta-tag" key={tag}>{tag}</span>)}
+              <button type="button" onClick={() => setSelectedDish(activeDish)}>Ver ficha</button>
+            </motion.article>
+          )}
+          <p className="verification-note carta-verification">Fotografías solo donde se corresponden con el plato verificado. Consulte alérgenos e ingredientes con el personal antes de pedir.</p>
         </main>
         {selectedDish && (
           <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={() => setSelectedDish(null)}>
             <motion.div className="dish-modal" initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} onClick={(event) => event.stopPropagation()}>
               <button className="modal-close" onClick={() => setSelectedDish(null)} aria-label="Cerrar"><X /></button>
-              <img src={selectedDish.image} alt={selectedDish.name} />
+              {selectedDish.image
+                ? <img src={selectedDish.image} alt={selectedDish.name} />
+                : <div className="dish-modal-placeholder"><UtensilsCrossed size={42} /><span>{selectedDish.category}</span></div>}
               <div><small>{selectedDish.category}</small><h2>{selectedDish.name}</h2><p>{selectedDish.description}</p><strong>{selectedDish.price || 'Precio por confirmar'}</strong><p className="allergen-note">Fotografía e información pendientes de validar. Consulta alérgenos e ingredientes con el personal.</p></div>
             </motion.div>
           </div>

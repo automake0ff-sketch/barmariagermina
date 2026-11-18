@@ -159,6 +159,35 @@ footer > a:last-child { display: flex; align-items: center; gap: 8px; font-size:
 .qr-header { height: 76px; display: flex; align-items: center; justify-content: space-between; padding: 10px 5.5%; background: var(--ink); color: white; position: sticky; top: 0; z-index: 20; }
 .qr-header .nav-reserve { color: white; }
 .qr-menu { min-height: calc(100vh - 76px); padding: 70px 5% 90px; background: var(--cream); }
+.carta-intro { position: fixed; z-index: 200; inset: 0; display: grid; place-content: center; justify-items: center; gap: 18px; background: radial-gradient(circle at 50% 45%, #3d4032 0, #24251f 58%, #171814 100%); color: white; overflow: hidden; }
+.carta-intro-light { position: absolute; width: 70vw; height: 70vw; border-radius: 50%; background: radial-gradient(circle, rgba(210,179,126,.18), transparent 68%); animation: intro-breathe 4s ease-in-out infinite; }
+.carta-intro-logo { position: relative; z-index: 2; width: min(520px, 82vw); max-height: 300px; object-fit: contain; filter: drop-shadow(0 18px 30px rgba(0,0,0,.28)); }
+.carta-intro p { position: relative; z-index: 2; margin: 0; font-size: 10px; letter-spacing: 4px; }
+.carta-intro button { position: absolute; z-index: 3; right: 24px; bottom: 24px; border: 1px solid rgba(255,255,255,.55); background: transparent; color: white; border-radius: 30px; padding: 10px 16px; text-transform: uppercase; letter-spacing: 1px; font-size: 10px; cursor: pointer; }
+@keyframes intro-breathe { 50% { transform: scale(1.08); opacity: .7; } }
+.carta-brand-logo { width: 58px; height: 58px; object-fit: cover; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; }
+.carta-tools { align-items: flex-end; }
+.carta-3d { height: 430px; position: relative; display: grid; place-items: center; perspective: 1000px; overflow: hidden; border-radius: 4px; background: radial-gradient(ellipse at 50% 78%, rgba(142,93,56,.24), transparent 42%), linear-gradient(135deg, rgba(255,250,241,.7), rgba(203,189,157,.42)); }
+.carta-carousel { position: absolute; inset: 0; display: grid; place-items: center; transform-style: preserve-3d; }
+.carta-plate { position: absolute; width: 300px; height: 300px; border: 0; border-radius: 50%; background: transparent; padding: 18px; cursor: pointer; transform-style: preserve-3d; filter: drop-shadow(0 24px 18px rgba(69,49,31,.28)); }
+.carta-plate img { width: 100%; height: 100%; object-fit: cover; border: 12px solid #ece4d3; border-radius: 50%; box-shadow: 0 8px 20px rgba(50,39,28,.18); }
+.carta-plate.active { animation: carta-float 3.8s ease-in-out infinite; }
+@keyframes carta-float { 50% { translate: 0 -7px; } }
+.carta-plate-name { position: absolute; left: 50%; bottom: -2px; transform: translateX(-50%); max-width: 280px; width: max-content; background: var(--ink); color: white; padding: 8px 12px; font-family: 'Oswald'; text-transform: uppercase; font-size: 12px; line-height: 1.1; }
+.carta-typographic-plate { width: 100%; height: 100%; display: grid; place-content: center; justify-items: center; gap: 10px; border: 12px solid #ece4d3; border-radius: 50%; background: radial-gradient(circle, #fffaf1 0 49%, #cbbd9d 50% 58%, #ece4d3 59%); color: var(--ink); box-shadow: 0 8px 20px rgba(50,39,28,.18); }
+.carta-typographic-plate span { max-width: 180px; font-family: 'Oswald'; font-size: 16px; text-transform: uppercase; }
+.carta-arrow { position: absolute; z-index: 30; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; display: grid; place-items: center; border: 1px solid #b3a990; border-radius: 50%; background: var(--paper); color: var(--ink); cursor: pointer; }
+.carta-arrow-left { left: 24px; }
+.carta-arrow-right { right: 24px; }
+.carta-detail { min-height: 150px; display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 20px; margin-top: 18px; padding: 22px 26px; background: var(--paper); border-left: 4px solid var(--terracotta); }
+.carta-detail h2 { margin: 0 0 6px; font-size: 34px; }
+.carta-detail p:not(.eyebrow) { margin: 0; color: #777466; }
+.carta-detail > strong { font-family: 'Oswald'; font-size: 24px; white-space: nowrap; }
+.carta-detail > button { grid-column: 3; border: 0; background: var(--terracotta); color: white; padding: 11px 14px; text-transform: uppercase; font-size: 10px; font-weight: 800; cursor: pointer; }
+.carta-tag { align-self: start; background: var(--olive); color: white; padding: 5px 8px; font-size: 9px; text-transform: uppercase; }
+.carta-verification { margin: 18px 0 0; }
+.dish-modal-placeholder { min-height: 430px; display: grid; place-content: center; justify-items: center; gap: 12px; background: radial-gradient(circle, #fffaf1 0 38%, #cbbd9d 39% 48%, #ece4d3 49%); color: var(--ink); }
+.dish-modal-placeholder span { font-family: 'Oswald'; text-transform: uppercase; }
 .modal-backdrop { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(25,24,20,.72); backdrop-filter: blur(8px); }
 .dish-modal { width: min(760px, 94vw); max-height: 82vh; display: grid; grid-template-columns: 52% 48%; position: relative; background: var(--paper); box-shadow: 0 30px 80px rgba(0,0,0,.32); }
 .dish-modal > img { width: 100%; height: 100%; min-height: 430px; object-fit: cover; }
@@ -245,7 +274,27 @@ footer > a:last-child { display: flex; align-items: center; gap: 8px; font-size:
   .dish-modal > img { height: 300px; min-height: 300px; }
   .dish-modal > div { padding: 28px 20px 40px; }
   .dish-modal h2 { font-size: 34px; }
+  .dish-modal-placeholder { min-height: 280px; }
   .toast { left: 12px; right: 12px; bottom: 76px; }
+  .qr-header { height: 68px; padding: 8px 16px; }
+  .carta-brand-logo { width: 48px; height: 48px; }
+  .qr-header .brand strong { font-size: 13px; }
+  .qr-header .nav-reserve { padding: 10px; font-size: 10px; }
+  .qr-menu { padding: 52px 12px 70px; }
+  .carta-tools { display: block; }
+  .carta-3d { height: 340px; }
+  .carta-plate { width: 220px; height: 220px; padding: 12px; }
+  .carta-plate img { border-width: 8px; }
+  .carta-plate-name { max-width: 210px; font-size: 10px; }
+  .carta-arrow { width: 40px; height: 40px; }
+  .carta-arrow-left { left: 8px; }
+  .carta-arrow-right { right: 8px; }
+  .carta-detail { grid-template-columns: 1fr auto; gap: 12px; padding: 18px 16px; }
+  .carta-detail h2 { font-size: 28px; }
+  .carta-detail > strong { font-size: 18px; }
+  .carta-detail > button { grid-column: 1 / -1; width: 100%; }
+  .carta-tag { display: none; }
+  .carta-intro-logo { width: 84vw; }
 }
 
 @media (prefers-reduced-motion: reduce) {
