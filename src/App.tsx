@@ -9,7 +9,18 @@ const PHONE = '+34 854 70 51 67'
 const PHONE_LINK = 'tel:+34854705167'
 const MAPS_LINK = 'https://www.google.com/maps/search/?api=1&query=Maria+Germina+Tapas+Calle+Flor+de+Albahaca+1+Sevilla'
 const INSTAGRAM = 'https://www.instagram.com/mariagerminatapa/'
-const INTRO_VIDEO_URL: string | null = null
+const INTRO_VIDEO_URL = '/videos/maria-germina-intro.mp4'
+const INTRO_SCENE_DURATION_MS = 3000
+const INTRO_DURATION_MS = INTRO_SCENE_DURATION_MS * 3
+const INTRO_SCENES = [
+  { image: '/images/1.jpg', alt: 'Fachada y entrada publicada en la web oficial', kicker: 'SEVILLA ESTE', title: 'María Germiná' },
+  { image: '/images/2.jpg', alt: 'Fotografía gastronómica del sitio oficial; el plato no está identificado', kicker: 'SABORES PARA COMPARTIR', title: 'Gastronomía de la casa' },
+  { image: null, alt: '', kicker: 'CARTA DIGITAL', title: 'Descubre nuestra carta' },
+] as const
+
+const TOUR_SCENES = [
+  { image: '/images/1.jpg', title: 'Fachada y entrada', alt: 'Fachada de María Germiná Tapas en Sevilla Este' },
+] as const
 
 type Dish = {
   name: string
@@ -204,20 +215,29 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
 }
 
 const cartaCategoryNotes: Partial<Record<(typeof cartaCategories)[number], string>> = {
-  'Tapas frías': 'La foto física confirma esta categoría, pero los nombres y precios no se leen con fiabilidad en la imagen disponible.',
+  'Tapas frías': 'La foto física confirma esta categoría, pero la imagen pública disponible no permite leer con fiabilidad los nombres y precios. No se han inventado.',
   Germinitos: 'Transcripción de las líneas legibles de la foto física. El nombre de la brocheta no se distingue por completo.',
 }
 
 const favorites = [
-  { name: 'Pavías de merluza XXL', image: '/images/1.jpg', className: 'dish-pavias' },
-  { name: 'Croquetas caseras', image: '/images/photo-1.jpg', className: 'dish-croquetas' },
-  { name: 'Patatas Braviolis', image: '/images/2.jpg', className: 'dish-braviolis' },
-  { name: 'Langostinos al ajillo', image: '/images/3.jpg', className: 'dish-langostinos' },
-  { name: 'Tataki de atún', image: '/images/photo-5.jpg', className: 'dish-tataki' },
+  { name: 'Pavías de merluza XXL', className: 'dish-pavias' },
+  { name: 'Croquetas caseras', className: 'dish-croquetas' },
+  { name: 'Patatas Braviolis', className: 'dish-braviolis' },
+  { name: 'Langostinos al ajillo', className: 'dish-langostinos' },
+  { name: 'Tataki de atún', className: 'dish-tataki' },
 ]
 
 function saveDemo(key: string, value: unknown) {
   localStorage.setItem(key, JSON.stringify(value))
+}
+
+function DishPhotoPlaceholder({ dishName, className = '' }: { dishName: string; className?: string }) {
+  return (
+    <div className={`dish-photo-placeholder ${className}`} role="img" aria-label={`Fotografía auténtica pendiente de verificar: ${dishName}`}>
+      <UtensilsCrossed size={28} aria-hidden="true" />
+      <small>Fotografía real pendiente</small>
+    </div>
+  )
 }
 
 export default function App() {
@@ -230,6 +250,8 @@ export default function App() {
   const [cartaCategory, setCartaCategory] = useState<(typeof cartaCategories)[number]>('De la mar...')
   const [cartaIndex, setCartaIndex] = useState(0)
   const [introVisible, setIntroVisible] = useState(true)
+  const [introSceneIndex, setIntroSceneIndex] = useState(0)
+  const [introVideoReady, setIntroVideoReady] = useState(false)
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const reduceMotion = useReducedMotion()
 
@@ -250,8 +272,14 @@ export default function App() {
     const timer = window.setTimeout(() => {
       sessionStorage.setItem('mg-carta-intro-seen', '1')
       setIntroVisible(false)
-    }, 3400)
-    return () => window.clearTimeout(timer)
+    }, INTRO_DURATION_MS)
+    const sceneTimer = window.setInterval(() => {
+      setIntroSceneIndex((current) => Math.min(current + 1, INTRO_SCENES.length - 1))
+    }, INTRO_SCENE_DURATION_MS)
+    return () => {
+      window.clearTimeout(timer)
+      window.clearInterval(sceneTimer)
+    }
   }, [reduceMotion])
 
   useEffect(() => {
@@ -318,6 +346,8 @@ export default function App() {
       setCartaCategory(item)
       setQuery('')
     }
+    const introScene = INTRO_SCENES[introSceneIndex]
+    const isFinalIntroScene = introSceneIndex === INTRO_SCENES.length - 1
 
     return (
       <>
@@ -332,36 +362,74 @@ export default function App() {
             transition={{ duration: .45 }}
           >
             <div className="carta-intro-light" />
-            {INTRO_VIDEO_URL && !reduceMotion ? (
+            <AnimatePresence mode="wait" initial={false}>
+              {!introVideoReady && (
+                <motion.div
+                  key={introSceneIndex}
+                  className={`carta-intro-scene ${introScene.image ? '' : 'carta-intro-endcard'}`}
+                  initial={reduceMotion ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={reduceMotion ? undefined : { opacity: 0 }}
+                  transition={{ duration: reduceMotion ? 0 : .8 }}
+                >
+                  {introScene.image && (
+                    <motion.img
+                      className="carta-intro-scene-image"
+                      src={introScene.image}
+                      alt={introScene.alt}
+                      initial={reduceMotion ? false : { scale: 1.04 }}
+                      animate={{ scale: reduceMotion ? 1 : 1.12 }}
+                      transition={{ duration: INTRO_SCENE_DURATION_MS / 1000, ease: 'linear' }}
+                    />
+                  )}
+                  <div className="carta-intro-scene-shade" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+            {!reduceMotion && (
               <video
-                className="carta-intro-video"
+                className={`carta-intro-video ${introVideoReady ? 'is-ready' : ''}`}
                 src={INTRO_VIDEO_URL}
                 autoPlay
                 muted
                 playsInline
-                preload="metadata"
+                preload="none"
                 onEnded={skipIntro}
-                aria-label="Entrada al restaurante"
+                onPlaying={() => setIntroVideoReady(true)}
+                onError={() => setIntroVideoReady(false)}
+                aria-label="Vídeo de presentación opcional del restaurante"
               />
-            ) : (
-              <img className="carta-intro-venue" src="/images/entrada-maps.webp" alt="Exterior de María Germiná Tapas" />
             )}
-            <motion.img
-              className="carta-intro-logo"
-              src="/images/logo-maria-germina.jpg"
-              alt="María Germiná Tapas"
-              initial={reduceMotion ? false : { opacity: 0, scale: .92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: .8 }}
-            />
-            <motion.p
-              initial={reduceMotion ? false : { opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: .7, duration: .6 }}
-            >
-              MARÍA GERMINÁ · SEVILLA ESTE
-            </motion.p>
-            <button type="button" onClick={skipIntro}>Ver carta</button>
+            <div className="carta-intro-content">
+              <motion.img
+                className="carta-intro-logo"
+                src="/images/logo-maria-germina.jpg"
+                alt="María Germiná Tapas"
+                initial={reduceMotion ? false : { opacity: 0, scale: .92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: .8 }}
+              />
+              <p className="carta-intro-kicker">MARÍA GERMINÁ · SEVILLA ESTE</p>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  className="carta-intro-caption"
+                  key={introScene.title}
+                  initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
+                  transition={{ duration: reduceMotion ? 0 : .4 }}
+                >
+                  <p>{introScene.kicker}</p>
+                  <h1>{introScene.title}</h1>
+                </motion.div>
+              </AnimatePresence>
+              {isFinalIntroScene && (
+                <a className="carta-intro-explore" href="#carta-menu" onClick={skipIntro}>
+                  Explorar carta <ArrowRight size={17} />
+                </a>
+              )}
+            </div>
+            <button className="carta-intro-skip" type="button" onClick={skipIntro}>Saltar introducción</button>
           </motion.div>
         )}
         </AnimatePresence>
@@ -372,7 +440,40 @@ export default function App() {
           </a>
           <a className="nav-reserve" href={PHONE_LINK}><Phone size={17} /> Llamar</a>
         </header>
-        <main className="qr-menu">
+        <section className="venue-tour" aria-labelledby="venue-tour-title">
+          <div className="venue-tour-heading">
+            <p className="eyebrow">UNA MIRADA A MARÍA GERMINÁ</p>
+            <h1 id="venue-tour-title">CONOCE MARÍA GERMINÁ</h1>
+            <p>Un recorrido solo puede enseñar los espacios que cuentan con fotografías reales verificables.</p>
+          </div>
+          <div className="venue-tour-panel">
+            {TOUR_SCENES.map((scene, index) => (
+              <motion.figure className="venue-tour-scene" key={scene.title} initial={reduceMotion ? false : { opacity: 0, scale: .98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: .6 }}>
+                <img src={scene.image} alt={scene.alt} loading="lazy" />
+                <figcaption><span>ESCENA {String(index + 1).padStart(2, '0')} / {String(TOUR_SCENES.length).padStart(2, '0')}</span><strong>{scene.title}</strong></figcaption>
+              </motion.figure>
+            ))}
+            <div className="venue-tour-copy">
+              <p className="eyebrow">FACHADA Y ENTRADA</p>
+              <h2>Una casa de tapas en Sevilla Este.</h2>
+              <p>La fachada está documentada en los recursos disponibles; no hemos podido verificar imágenes del interior, la barra, las mesas o la terraza. No representamos esos espacios sin fotografías reales.</p>
+              <div className="venue-tour-progress" role="progressbar" aria-label="Progreso del recorrido" aria-valuemin={1} aria-valuemax={TOUR_SCENES.length} aria-valuenow={1}>
+                <span className="active" />
+              </div>
+              <div className="venue-tour-controls">
+                <button type="button" disabled aria-label="Escena anterior"><ArrowLeft size={17} /></button>
+                <span>01 / 01 · Fachada</span>
+                <button type="button" disabled aria-label="Escena siguiente"><ArrowRight size={17} /></button>
+              </div>
+              <div className="venue-tour-actions">
+                <a className="button button-primary" href="#carta-menu">Ver carta <ArrowRight size={17} /></a>
+                <a className="button button-ghost-dark" href={MAPS_LINK} target="_blank" rel="noreferrer">Cómo llegar <MapPin size={17} /></a>
+                <a className="button button-ghost-dark" href={PHONE_LINK}><Phone size={17} /> Llamar para reservar</a>
+              </div>
+            </div>
+          </div>
+        </section>
+        <main className="qr-menu" id="carta-menu">
           <div className="section-heading">
             <div><p className="eyebrow">CARTA DIGITAL</p><h2>ELIGE TU TENTACIÓN</h2></div>
             <p>Transcripción de las fotos de la carta física que confirmaste como vigentes, completada con datos de la carta web. Cuando difieren, mostramos ambas referencias o marcamos el precio por confirmar; no se ha inventado información.</p>
@@ -431,7 +532,12 @@ export default function App() {
                     transition={{ type: 'spring', stiffness: 120, damping: 20 }}
                   >
                     <div className={`carta-platter ${wrappedOffset === 0 ? 'active' : ''}`} aria-hidden="true">
-                      <div className="carta-platter-face"><span>{dish.category}</span></div>
+                      <div className="carta-platter-face">
+                        {dish.image
+                          ? <img className="carta-platter-photo" src={dish.image} alt="" loading="lazy" decoding="async" />
+                          : <div className="carta-photo-placeholder"><UtensilsCrossed size={22} /><small>Foto real pendiente</small></div>}
+                        <span>{dish.category}</span>
+                      </div>
                       <div className="carta-platter-face back"><span>{dish.category}</span></div>
                     </div>
                     <span className="carta-plate-name">{dish.name}</span>
@@ -453,7 +559,7 @@ export default function App() {
               <button type="button" onClick={() => setSelectedDish(activeDish)}>Ver ficha</button>
             </motion.article>
           )}
-          <p className="verification-note carta-verification">No se han asociado fotos de plato porque no se pudo verificar que representen cada producto. Los precios legibles transcriben las fotos y las diferencias entre la carta física y la web quedan pendientes de confirmar. Suplemento confirmado por ti: 0,60 € por mesa; una foto de la carta web muestra 0,80 € por comensal. Consulta también disponibilidad, ingredientes, alérgenos y vinos fuera de carta con el restaurante.</p>
+          <p className="verification-note carta-verification">Las fotos de comida disponibles en la web oficial no identifican cada plato, así que no se han asignado a productos concretos. Los precios legibles transcriben las fotos y las diferencias entre la carta física y la web quedan pendientes de confirmar. Suplemento confirmado por ti: 0,60 € por mesa; una foto de la carta web muestra 0,80 € por comensal. Consulta también disponibilidad, ingredientes, alérgenos y vinos fuera de carta con el restaurante.</p>
         </main>
         {selectedDish && (
           <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={() => setSelectedDish(null)}>
@@ -461,7 +567,7 @@ export default function App() {
               <button className="modal-close" onClick={() => setSelectedDish(null)} aria-label="Cerrar"><X /></button>
               {selectedDish.image
                 ? <img src={selectedDish.image} alt={selectedDish.name} />
-                : <div className="dish-modal-placeholder"><UtensilsCrossed size={42} /><span>{selectedDish.category}</span></div>}
+                : <DishPhotoPlaceholder dishName={selectedDish.name} className="dish-modal-placeholder" />}
               <div><small>{selectedDish.category}</small><h2>{selectedDish.name}</h2><p>{selectedDish.description}</p><strong>{selectedDish.price || 'Precio por confirmar'}</strong><p className="allergen-note">Fotografía e información pendientes de validar. Consulta alérgenos e ingredientes con el personal.</p></div>
             </motion.div>
           </div>
@@ -503,7 +609,7 @@ export default function App() {
             </div>
           </motion.div>
           <div className="hero-photo">
-            <img src="/images/1.jpg" alt="Tapas de María Germiná" />
+            <img src="/images/1.jpg" alt="Fachada de María Germiná Tapas" />
             <div className="hero-seal"><span>BUEN<br />AMBIENTE</span></div>
           </div>
         </section>
@@ -525,7 +631,7 @@ export default function App() {
                 viewport={{ once: true, amount: .4 }}
                 transition={{ duration: .9, delay: index * .12 }}
               >
-                <img src={dish.image} alt={dish.name} />
+                <DishPhotoPlaceholder dishName={dish.name} />
                 <span>{dish.name}</span>
               </motion.div>
             ))}
@@ -535,8 +641,8 @@ export default function App() {
 
         <section className="house-section" id="casa">
           <div className="house-images">
-            <img className="house-main" src="/images/2.jpg" alt="Ambiente del local" />
-            <img className="house-detail" src="/images/photo-6.jpg" alt="Detalle gastronómico" />
+            <img className="house-main" src="/images/2.jpg" alt="Fotografía gastronómica publicada en la web oficial; plato sin identificar" />
+            <img className="house-detail" src="/images/photo-6.jpg" alt="Fotografía de la carta física de María Germiná Tapas" />
           </div>
           <motion.div className="house-copy" initial={reduceMotion ? false : { opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
             <p className="eyebrow">NUESTRA CASA</p>
@@ -569,7 +675,12 @@ export default function App() {
           <div className="dish-grid">
             {filteredDishes.map((dish) => (
               <motion.button className="dish-card" key={dish.name} onClick={() => setSelectedDish(dish)} whileHover={reduceMotion ? undefined : { y: -6 }}>
-                <div className="dish-image"><img src={dish.image} alt={dish.name} />{dish.tags?.map((tag) => <span key={tag}>{tag}</span>)}</div>
+                <div className="dish-image">
+                  {dish.image
+                    ? <img src={dish.image} alt={dish.name} loading="lazy" />
+                    : <DishPhotoPlaceholder dishName={dish.name} />}
+                  {dish.tags?.map((tag) => <span key={tag}>{tag}</span>)}
+                </div>
                 <div className="dish-card-copy">
                   <small>{dish.category}</small>
                   <h3>{dish.name}</h3>
@@ -689,7 +800,9 @@ export default function App() {
         <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={() => setSelectedDish(null)}>
           <motion.div className="dish-modal" initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} onClick={(event) => event.stopPropagation()}>
             <button className="modal-close" onClick={() => setSelectedDish(null)} aria-label="Cerrar"><X /></button>
-            <img src={selectedDish.image} alt={selectedDish.name} />
+            {selectedDish.image
+              ? <img src={selectedDish.image} alt={selectedDish.name} />
+              : <DishPhotoPlaceholder dishName={selectedDish.name} className="dish-modal-placeholder" />}
             <div>
               <small>{selectedDish.category}</small>
               <h2>{selectedDish.name}</h2>
