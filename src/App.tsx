@@ -28,21 +28,90 @@ const dishes: Dish[] = [
 ]
 
 const cartaCategories = [
+  'Tapas frías',
+  'Germinitos',
+  'Menú infantil',
+  'De la mar...',
+  'De la freidora',
+  'Carnívoros',
+  'El Toke dulce',
+  'Nuestra bodega',
+  'Hablemos de vinos',
   'Chacinas',
   'Algo ligerito',
   'Más de lo nuestro',
-  'De la mar...',
-  'De la freidora',
   'Montaditos',
-  'Infantil',
   'Vegano',
-  'Carnívoros',
-  'Toke dulce',
-  'Nuestra bodega',
-  'Hablamos de vinos',
 ] as const
 
 const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
+  'Tapas frías': [],
+  Germinitos: [],
+  'Menú infantil': [
+    { name: 'Solomillo de pollo crujiente con patatas y huevo frito', price: '3,75 €' },
+    { name: 'Pinchito de pollo', price: '3,95 €' },
+    { name: 'Tapa de croquetas', description: 'Puchero o jamón.', price: '3,95 €' },
+    { name: 'Pollo rebozado', description: 'Con patatas fritas y huevo.', price: '6,50 €' },
+    { name: 'Burguer con queso', description: 'Con patatas fritas.', price: '4,95 €' },
+  ],
+  'De la mar...': [
+    { name: 'Lomo de bacalao confitado', description: 'A baja temperatura con piperrada.', price: '3,75 €' },
+    { name: 'Pavía de gambones', price: '3,75 €' },
+    { name: 'Pavía de merluza de pintxo', price: 'Foto física 3,75 € · carta web 4,75 € (confirmar)' },
+    { name: 'Pulpo braseado', description: 'Con virutas de patata.', price: 'Foto física 5,75 € · carta web 7,50 € (confirmar)' },
+    { name: 'Langostinos al ajillo a nuestro estilo', price: '3,75 €' },
+    { name: 'Tartar de langostinos salteados con miel', price: '3,50 €' },
+    { name: 'CangreBurger auténtica', price: '5,00 €' },
+    { name: 'Langostinos tenderete', price: '4,50 €' },
+  ],
+  'De la freidora': [
+    { name: 'Taquitos de bacalao', price: 'Tapa 2,75 € · Compartir 7,00 €' },
+    { name: 'Croquetas de chipirón', price: 'Tapa 3,00 € · Compartir 6,50 €' },
+    { name: 'Croquetas de pulpo', price: 'Tapa 3,00 € · Compartir 6,50 €' },
+    { name: 'Croquetas de cola de toro', price: 'Tapa 3,00 € · Compartir 6,50 €' },
+    { name: 'Bravas Germiná', price: 'Tapa 2,50 € · Compartir 6,00 €' },
+    { name: 'Choco frito', price: 'Tapa 2,75 € · Compartir 6,50 €' },
+    { name: 'Ortigüillas de Chipiona', price: 'Media 7,00 € · Compartir 12,00 €' },
+    { name: 'Tortillita de camarones de Sanlúcar', price: 'Carta web: 3,95 €/ud · confirmar' },
+    { name: 'Croquetas variadas', description: 'Puchero, cola de toro, chipirón en su tinta, jamón, boletus y trufa, queso azul y cebolla caramelizada, serranito, secreto y miel.', price: 'Carta web: T 3,95 € · R 9,00 € · confirmar' },
+    { name: 'Bocaditos fritos', description: 'Merluza, bacalao o cazón en adobo.', price: 'Carta web: T 4,50 € · R 9,00 € · confirmar' },
+    { name: 'Tiras de choco fritas', price: 'Carta web: T 4,50 € · R 9,00 € · confirmar' },
+    { name: 'Pavía XXL de merluza', price: 'Precio pendiente de confirmar' },
+    { name: 'Papas bravas Braviolis', price: 'Carta web: T 3,95 € · R 7,50 € · confirmar' },
+    { name: 'Fingers de pollo artesanos', description: 'Con coulis de miel y mostaza.', price: 'Carta web: T 4,95 € · R 8,50 € · confirmar' },
+  ],
+  Carnívoros: [
+    { name: 'Fingers de pollo en tandori', price: 'Tapa 2,75 € · Compartir 6,00 €' },
+    { name: 'Tataky de presa', description: 'Con crema de cabrales.', price: '4,00 €' },
+    { name: 'Presa ibérica', description: 'Con crujiente de jamón.', price: '4,00 €' },
+    { name: 'Brocheta de solomillo', description: 'Con verduras.', price: '4,50 €' },
+    { name: 'Serrano especial del Chef', price: '5,00 €' },
+    { name: 'Burger Angus', description: '200 g.', price: '5,00 €' },
+    { name: 'Mini burger Angus completa', price: '3,75 €' },
+    { name: 'Chuleta de vaca madurada', description: '25 días, 350 g aprox.', price: '16,95 €' },
+    { name: 'Serrano del Chef con huevo', description: 'Lomo o pollo.', price: 'Precio pendiente de confirmar' },
+    { name: 'Hamburguesa de txuleta de vaca', description: 'Con huevo.', price: 'Precio pendiente de confirmar' },
+    { name: 'Brocheta XXL de solomillo de cerdo', description: 'Con verduras crujientes.', price: 'Carta web: 12,50 € · confirmar' },
+    { name: 'Solomillo de cerdo al brandy o al gorgonzola', price: 'Carta web: T 4,50 € · R 9,00 € · confirmar' },
+    { name: 'Presa ibérica plancheada', description: 'Con taquitos de jamón.', price: 'Precio pendiente de confirmar' },
+    { name: 'Churrasco de cerdo', description: 'Aprox. 300 g.', price: 'Carta web: 12,50 € · confirmar' },
+    { name: 'Secreto ibérico al punto', price: 'Carta web: 13,95 € · confirmar' },
+    { name: 'Lagartito ibérico o abanico ibérico', price: 'Carta web: 13,95 € · confirmar' },
+    { name: 'Presa ibérica (300 g, carta web)', price: 'Carta web: 16,95 € · confirmar' },
+  ],
+  'El Toke dulce': [
+    { name: 'Coulant caliente de corazón líquido', price: '4,50 €' },
+    { name: 'Brownie', description: 'Con sopa fría de chocolate blanco.', price: '3,75 €' },
+    { name: 'Tarta de chocolate suizo Toblerone', price: '3,75 €' },
+    { name: 'Tarta de almendras y chocolate', price: '3,75 €' },
+    { name: 'Helado con nata y dulce de leche', price: '3,00 €' },
+    { name: 'Sorbete de cítrico', description: 'Lemon pie o mango.', price: '3,00 €' },
+    { name: 'Brownie casero', description: 'Con helado de vainilla, nata y sopa de chocolate blanco.', price: 'Precio pendiente de confirmar' },
+    { name: 'Coulant de chocolate negro', description: 'Con helado de vainilla y nata.', price: 'Precio pendiente de confirmar' },
+    { name: 'Tarta Milka', description: 'Con helado de vainilla y dulce de leche.', price: 'Precio pendiente de confirmar' },
+    { name: 'Tarta de queso casera', description: 'Con helado de vainilla y nata. Elige el sirope.', price: 'Precio pendiente de confirmar' },
+    { name: 'Copa de helado', description: '2 bolas de vainilla, dulce de leche y nata.', price: 'Precio pendiente de confirmar' },
+  ],
   Chacinas: [
     { name: 'Chicharrón de Cádiz', price: '3,95 €' },
     { name: 'Plato de queso', price: '8,00 €' },
@@ -66,7 +135,6 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
     { name: 'Pata de pulpo', description: 'Trenzado con pimentón y suave de patata.', price: '14,95 €' },
     { name: 'Chipirón plancheado', description: 'Con coulis de salsa verde.', price: 'T 4,95 € · R 8,95 €' },
     { name: 'Tosta crujiente con tataki de presa ibérica', description: 'Con gorgonzola y tomate.', price: 'Precio pendiente de confirmar' },
-    { name: 'Lomo de bacalao confitado', description: 'A baja temperatura con piperrada.', price: 'Precio pendiente de confirmar' },
     { name: 'Lomo de lubina plancheada', price: '9,95 €' },
     { name: 'Noodles con vegetales y gambas o pollo', price: '6,75 €' },
     { name: 'Morcilla de cebolla', description: 'Con huevo frito.', price: '4,50 €' },
@@ -74,34 +142,10 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
     { name: 'Tortilla ibérica', description: 'Con salmorejo y taquitos de jamón.', price: '5,50 €' },
     { name: 'Tortilla con salsa al brandy', price: 'Precio pendiente de confirmar' },
   ],
-  'De la mar...': [
-    { name: 'CangreBurger auténtica', price: '5,00 €' },
-    { name: 'Lomo de bacalao confitado', description: 'A baja temperatura con piperrada.', price: 'Precio pendiente de confirmar' },
-    { name: 'Pavía de gambones', price: '3,75 €' },
-    { name: 'Pavía de merluza de pintxo', price: '4,75 €' },
-    { name: 'Pulpo braseado', description: 'Con virutas de patata.', price: '7,50 €' },
-    { name: 'Langostinos al ajillo a nuestro estilo', price: '3,75 €' },
-    { name: 'Langostinos tenderete', price: '4,50 €' },
-  ],
-  'De la freidora': [
-    { name: 'Tortillita de camarones de Sanlúcar', price: '3,95 €/ud' },
-    { name: 'Croquetas variadas', description: 'Puchero, cola de toro, chipirón en su tinta, jamón, boletus y trufa, queso azul y cebolla caramelizada, serranito, secreto y miel.', price: 'T 3,95 € · R 9,00 €' },
-    { name: 'Bocaditos fritos', description: 'Merluza, bacalao o cazón en adobo.', price: 'T 4,50 € · R 9,00 €' },
-    { name: 'Tiras de choco fritas', price: 'T 4,50 € · R 9,00 €' },
-    { name: 'Pavía XXL de merluza', price: 'Precio pendiente de confirmar', tags: ['Especialidad'] },
-    { name: 'Papas bravas Braviolis', price: 'T 3,95 € · R 7,50 €' },
-    { name: 'Fingers de pollo artesanos', description: 'Con coulis de miel y mostaza.', price: 'T 4,95 € · R 8,50 €' },
-  ],
   Montaditos: [
     { name: 'Montadito de queso de cabra y salmón ahumado', price: '3,95 €' },
     { name: 'Montadito Mantecado Sevillano', price: '3,95 €' },
     { name: 'Montadito de pollo plancheado', description: 'Con virutas de jamón.', price: '3,95 €' },
-  ],
-  Infantil: [
-    { name: 'Pinchito de pollo', price: '3,95 €' },
-    { name: 'Tapa de croquetas', description: 'Puchero o jamón.', price: '3,95 €' },
-    { name: 'Pollo rebozado', description: 'Con patatas fritas y huevo.', price: '6,50 €' },
-    { name: 'Burguer con queso', description: 'Con patatas fritas.', price: '4,95 €' },
   ],
   Vegano: [
     { name: 'Tartar de tofu', description: 'Con mango y aguacate.', price: '5,95 €' },
@@ -109,25 +153,6 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
     { name: 'Noodles con vegetales', price: '6,25 €' },
     { name: 'Alcachofa confitada', description: 'Con parmentier y trufa con AOVE.', price: 'Precio pendiente de confirmar' },
     { name: 'Burger de alcaucil', price: '7,50 €' },
-  ],
-  Carnívoros: [
-    { name: 'Chuleta de vaca madurada', description: '25 días, 350 g aprox.', price: '16,95 €' },
-    { name: 'Serrano del Chef', description: 'Con huevo, lomo o pollo.', price: 'Precio pendiente de confirmar' },
-    { name: 'Hamburguesa de txuleta de vaca', description: 'Con huevo.', price: 'Precio pendiente de confirmar' },
-    { name: 'Brocheta XXL de solomillo de cerdo', description: 'Con verduras crujientes.', price: '12,50 €' },
-    { name: 'Solomillo de cerdo al brandy o al gorgonzola', price: 'T 4,50 € · R 9,00 €' },
-    { name: 'Presa ibérica plancheada', description: 'Con taquitos de jamón.', price: 'Precio pendiente de confirmar' },
-    { name: 'Churrasco de cerdo', description: 'Aprox. 300 g.', price: '12,50 €' },
-    { name: 'Secreto ibérico al punto', price: '13,95 €' },
-    { name: 'Lagartito ibérico o abanico ibérico', price: '13,95 €' },
-    { name: 'Presa ibérica', description: 'Aprox. 300 g.', price: '16,95 €' },
-  ],
-  'Toke dulce': [
-    { name: 'Brownie casero', description: 'Con helado de vainilla, nata y sopa de chocolate blanco.', price: 'Precio pendiente de confirmar' },
-    { name: 'Coulant de chocolate negro', description: 'Con helado de vainilla y nata.', price: 'Precio pendiente de confirmar' },
-    { name: 'Tarta Milka', description: 'Con helado de vainilla y dulce de leche.', price: 'Precio pendiente de confirmar' },
-    { name: 'Tarta de queso casera', description: 'Con helado de vainilla y nata. Elige el sirope.', price: 'Precio pendiente de confirmar' },
-    { name: 'Copa de helado', description: '2 bolas de vainilla, dulce de leche y nata.', price: 'Precio pendiente de confirmar' },
   ],
   'Nuestra bodega': [
     { name: 'Cerveza Cruz Campo', price: '1,00 €' },
@@ -143,7 +168,7 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
     { name: 'Cerveza en copa', price: '1,50 €' },
     { name: 'Nestea', price: '1,50 €' },
   ],
-  'Hablamos de vinos': [
+  'Hablemos de vinos': [
     { name: 'Ribera Protos Roble', price: 'Copa 2,30 € · Botella 12,00 €' },
     { name: 'Ribera Finca Resalso', price: 'Copa 2,35 € · Botella 12,00 €' },
     { name: 'Ribera TierraFiel Joven', price: 'Copa 2,00 € · Botella 10,00 €' },
@@ -168,6 +193,11 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
   ],
 }
 
+const cartaCategoryNotes: Partial<Record<(typeof cartaCategories)[number], string>> = {
+  'Tapas frías': 'La foto física confirma esta categoría, pero los nombres y precios no se leen con fiabilidad en la imagen disponible.',
+  Germinitos: 'La foto física confirma esta categoría, pero los nombres y precios no se leen con fiabilidad en la imagen disponible.',
+}
+
 const favorites = [
   { name: 'Pavías de merluza XXL', image: '/images/1.jpg', className: 'dish-pavias' },
   { name: 'Croquetas caseras', image: '/images/photo-1.jpg', className: 'dish-croquetas' },
@@ -187,7 +217,7 @@ export default function App() {
   const [selectedDish, setSelectedDish] = useState<Dish | null>(null)
   const [notice, setNotice] = useState('')
   const [preparedRequest, setPreparedRequest] = useState('')
-  const [cartaCategory, setCartaCategory] = useState<(typeof cartaCategories)[number]>('Chacinas')
+  const [cartaCategory, setCartaCategory] = useState<(typeof cartaCategories)[number]>('De la mar...')
   const [cartaIndex, setCartaIndex] = useState(0)
   const [introVisible, setIntroVisible] = useState(true)
   const [touchStart, setTouchStart] = useState<number | null>(null)
@@ -304,7 +334,7 @@ export default function App() {
                 aria-label="Entrada al restaurante"
               />
             ) : (
-              <img className="carta-intro-venue" src="/images/1.jpg" alt="Exterior de María Germiná Tapas" />
+              <img className="carta-intro-venue" src="/images/entrada-maps.webp" alt="Exterior de María Germiná Tapas" />
             )}
             <motion.img
               className="carta-intro-logo"
@@ -335,7 +365,7 @@ export default function App() {
         <main className="qr-menu">
           <div className="section-heading">
             <div><p className="eyebrow">CARTA DIGITAL</p><h2>ELIGE TU TENTACIÓN</h2></div>
-            <p>Transcripción de fotos públicas sin fecha. La foto física incluye «De la mar...» y la carta web agrupa platos marinos en otra sección; se conservan ambas referencias. Confirma la versión y los precios vigentes con el restaurante.</p>
+            <p>Transcripción de las fotos de la carta física que confirmaste como vigentes, completada con datos de la carta web. Cuando difieren, mostramos ambas referencias o marcamos el precio por confirmar; no se ha inventado información.</p>
           </div>
           <div className="menu-tools carta-tools">
             <label className="search-box"><Search size={18} /><input value={query} onChange={(event) => { setCartaIndex(0); setQuery(event.target.value) }} placeholder="Buscar en toda la carta" /></label>
@@ -400,7 +430,7 @@ export default function App() {
               })}
             </div>
             <button className="carta-arrow carta-arrow-right" type="button" onClick={() => changeDish(1)} aria-label="Plato siguiente" disabled={cartaDishes.length < 2}><ArrowRight /></button>
-          </section> : <div className="carta-no-results">No hay platos que coincidan con «{query}».</div>}
+          </section> : <div className="carta-no-results">{normalizedQuery ? `No hay platos que coincidan con «${query}».` : cartaCategoryNotes[cartaCategory] || 'No hay platos disponibles en esta categoría.'}</div>}
           {activeDish && (
             <motion.article className="carta-detail" key={activeDish.name} initial={reduceMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
               <div>
@@ -413,7 +443,7 @@ export default function App() {
               <button type="button" onClick={() => setSelectedDish(activeDish)}>Ver ficha</button>
             </motion.article>
           )}
-          <p className="verification-note carta-verification">No se han asociado fotos de plato porque no se pudo verificar que representen cada producto. Los precios legibles transcriben las fotos consultadas, no certifican su vigencia; confirma precios, ingredientes y alérgenos con el restaurante. La carta fotografiada indica 0,80 € de servicio en mesa por comensal y recomienda consultar vinos fuera de carta; verifica también ambos datos.</p>
+          <p className="verification-note carta-verification">No se han asociado fotos de plato porque no se pudo verificar que representen cada producto. Los precios legibles transcriben las fotos y las diferencias entre la carta física y la web quedan pendientes de confirmar. El suplemento aparece como 0,60 € por mesa en la foto física y 0,80 € por comensal en la carta web; no se resuelve esa discrepancia. Consulta también disponibilidad, ingredientes, alérgenos y vinos fuera de carta con el restaurante.</p>
         </main>
         {selectedDish && (
           <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={() => setSelectedDish(null)}>
