@@ -9,18 +9,24 @@ const PHONE = '+34 854 70 51 67'
 const PHONE_LINK = 'tel:+34854705167'
 const MAPS_LINK = 'https://www.google.com/maps/search/?api=1&query=Maria+Germina+Tapas+Calle+Flor+de+Albahaca+1+Sevilla'
 const INSTAGRAM = 'https://www.instagram.com/mariagerminatapa/'
-const INTRO_VIDEO_URL = '/videos/maria-germina-intro.mp4'
 const INTRO_SCENE_DURATION_MS = 2500
 const INTRO_DURATION_MS = INTRO_SCENE_DURATION_MS * 4
 const INTRO_SCENES = [
   { kind: 'facade', image: '/images/1.jpg', alt: 'Fachada y entrada publicada en la web oficial', kicker: 'SEVILLA ESTE', title: 'María Germiná' },
-  { kind: 'ambience', image: null, alt: '', kicker: 'AMBIENTE VIBRANTE Y ANIMADO', title: 'El alma de Sevilla Este' },
-  { kind: 'gastronomy', image: '/images/2.jpg', alt: 'Fotografía gastronómica del sitio oficial; el plato no está identificado', kicker: 'TAPAS AUTÉNTICAS Y SABROSAS', title: 'Platos que conquistan' },
+  { kind: 'interlude', image: null, alt: '', kicker: 'TAPAS PARA COMPARTIR', title: 'Buenos momentos alrededor de la mesa' },
+  { kind: 'gastronomy', image: '/images/2.jpg', alt: 'Fotografía gastronómica del sitio oficial; el plato no está identificado', kicker: 'GASTRONOMÍA DE LA CASA', title: 'Sabores para compartir' },
   { kind: 'endcard', image: null, alt: '', kicker: 'CARTA DIGITAL', title: 'Descubre nuestra carta' },
 ] as const
 
 const TOUR_SCENES = [
-  { image: '/images/1.jpg', title: 'Fachada y entrada', alt: 'Fachada de María Germiná Tapas en Sevilla Este' },
+  {
+    image: '/images/1.jpg',
+    title: 'Fachada y entrada',
+    alt: 'Fachada de María Germiná Tapas en Sevilla Este',
+    eyebrow: 'FACHADA Y ENTRADA',
+    heading: 'Una casa de tapas en Sevilla Este.',
+    description: 'Por ahora solo hay una fotografía verificada: la fachada y la entrada. No mostramos el interior, la barra, las mesas ni la terraza sin fotografías autorizadas del propietario.',
+  },
 ] as const
 
 type Dish = {
@@ -33,10 +39,10 @@ type Dish = {
 }
 
 const dishes: Dish[] = [
-  { name: 'Chicharrón de Cádiz', category: 'Chacinas', description: 'Precio según carta fotografiada; confirmar vigencia.', price: '3,95 €' },
-  { name: 'Ensalada tropical', category: 'Algo ligerito', description: 'Con aguacate y mango.', price: '9,95 €' },
-  { name: 'Langostinos al ajillo con huevo de codorniz', category: 'Más de lo nuestro', description: 'Precio según carta fotografiada; confirmar vigencia.', price: 'T 3,95 € · R 8,50 €' },
-  { name: 'Papas bravas Braviolis', category: 'De la freidora', description: 'Precio según carta fotografiada; confirmar vigencia.', price: 'T 3,95 € · R 7,50 €' },
+  { name: 'Chicharrón de Cádiz', category: 'Chacinas', price: '3,95 €' },
+  { name: 'Ensalada tropical', category: 'Algo ligerito', description: 'Con aguacate y mango.', price: 'Consultar precio' },
+  { name: 'Langostinos al ajillo con huevo de codorniz', category: 'Más de lo nuestro', price: 'T 3,95 € · R 8,50 €' },
+  { name: 'Papas bravas Braviolis', category: 'De la freidora', price: 'Consultar precio' },
 ]
 
 const cartaCategories = [
@@ -64,7 +70,7 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
     { name: 'Pincho de pollo', price: '2,50 €' },
     { name: 'Queso de cabra y cebolla caramelizada', price: '2,50 €' },
     { name: 'Bocadito de calamares en pan bao', price: '2,75 €' },
-    { name: 'Brocheta (nombre parcialmente ilegible en la foto)', price: '2,50 €' },
+    { name: 'Brocheta', price: 'Consultar precio' },
     { name: 'Pollo con salsa caramelizada al PX', price: '2,50 €' },
     { name: 'Mini Germiná', price: '2,50 €' },
     { name: 'Queso cabrales con sardina ahumada', price: '2,50 €' },
@@ -94,13 +100,13 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
     { name: 'Bravas Germiná', price: 'Tapa 2,50 € · Compartir 6,00 €' },
     { name: 'Choco frito', price: 'Tapa 2,75 € · Compartir 6,50 €' },
     { name: 'Ortigüillas de Chipiona', price: 'Media 7,00 € · Compartir 12,00 €' },
-    { name: 'Tortillita de camarones de Sanlúcar', price: 'Carta web: 3,95 €/ud · confirmar' },
-    { name: 'Croquetas variadas', description: 'Puchero, cola de toro, chipirón en su tinta, jamón, boletus y trufa, queso azul y cebolla caramelizada, serranito, secreto y miel.', price: 'Carta web: T 3,95 € · R 9,00 € · confirmar' },
-    { name: 'Bocaditos fritos', description: 'Merluza, bacalao o cazón en adobo.', price: 'Carta web: T 4,50 € · R 9,00 € · confirmar' },
-    { name: 'Tiras de choco fritas', price: 'Carta web: T 4,50 € · R 9,00 € · confirmar' },
-    { name: 'Pavía XXL de merluza', price: 'Precio pendiente de confirmar' },
-    { name: 'Papas bravas Braviolis', price: 'Carta web: T 3,95 € · R 7,50 € · confirmar' },
-    { name: 'Fingers de pollo artesanos', description: 'Con coulis de miel y mostaza.', price: 'Carta web: T 4,95 € · R 8,50 € · confirmar' },
+    { name: 'Tortillita de camarones de Sanlúcar', price: 'Consultar precio' },
+    { name: 'Croquetas variadas', description: 'Puchero, cola de toro, chipirón en su tinta, jamón, boletus y trufa, queso azul y cebolla caramelizada, serranito, secreto y miel.', price: 'Consultar precio' },
+    { name: 'Bocaditos fritos', description: 'Merluza, bacalao o cazón en adobo.', price: 'Consultar precio' },
+    { name: 'Tiras de choco fritas', price: 'Consultar precio' },
+    { name: 'Pavía XXL de merluza', price: 'Consultar precio' },
+    { name: 'Papas bravas Braviolis', price: 'Consultar precio' },
+    { name: 'Fingers de pollo artesanos', description: 'Con coulis de miel y mostaza.', price: 'Consultar precio' },
   ],
   Carnívoros: [
     { name: 'Fingers de pollo en tandori', price: 'Tapa 2,75 € · Compartir 6,00 €' },
@@ -111,15 +117,15 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
     { name: 'Burger Angus', description: '200 g.', price: '5,00 €' },
     { name: 'Mini burger Angus completa', price: '3,75 €' },
     { name: 'Chuleta de vaca madurada', description: '25 días, 350 g aprox.', price: '16,95 €' },
-    { name: 'Serrano del Chef con huevo', description: 'Lomo o pollo.', price: 'Precio pendiente de confirmar' },
-    { name: 'Hamburguesa de txuleta de vaca', description: 'Con huevo.', price: 'Precio pendiente de confirmar' },
-    { name: 'Brocheta XXL de solomillo de cerdo', description: 'Con verduras crujientes.', price: 'Carta web: 12,50 € · confirmar' },
-    { name: 'Solomillo de cerdo al brandy o al gorgonzola', price: 'Carta web: T 4,50 € · R 9,00 € · confirmar' },
-    { name: 'Presa ibérica plancheada', description: 'Con taquitos de jamón.', price: 'Precio pendiente de confirmar' },
-    { name: 'Churrasco de cerdo', description: 'Aprox. 300 g.', price: 'Carta web: 12,50 € · confirmar' },
-    { name: 'Secreto ibérico al punto', price: 'Carta web: 13,95 € · confirmar' },
-    { name: 'Lagartito ibérico o abanico ibérico', price: 'Carta web: 13,95 € · confirmar' },
-    { name: 'Presa ibérica (300 g, carta web)', price: 'Carta web: 16,95 € · confirmar' },
+    { name: 'Serrano del Chef con huevo', description: 'Lomo o pollo.', price: 'Consultar precio' },
+    { name: 'Hamburguesa de txuleta de vaca', description: 'Con huevo.', price: 'Consultar precio' },
+    { name: 'Brocheta XXL de solomillo de cerdo', description: 'Con verduras crujientes.', price: 'Consultar precio' },
+    { name: 'Solomillo de cerdo al brandy o al gorgonzola', price: 'Consultar precio' },
+    { name: 'Presa ibérica plancheada', description: 'Con taquitos de jamón.', price: 'Consultar precio' },
+    { name: 'Churrasco de cerdo', description: 'Aprox. 300 g.', price: 'Consultar precio' },
+    { name: 'Secreto ibérico al punto', price: 'Consultar precio' },
+    { name: 'Lagartito ibérico o abanico ibérico', price: 'Consultar precio' },
+    { name: 'Presa ibérica', price: 'Consultar precio' },
   ],
   'El Toke dulce': [
     { name: 'Coulant caliente de corazón líquido', price: '4,50 €' },
@@ -128,11 +134,11 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
     { name: 'Tarta de almendras y chocolate', price: '3,75 €' },
     { name: 'Helado con nata y dulce de leche', price: '3,00 €' },
     { name: 'Sorbete de cítrico', description: 'Lemon pie o mango.', price: '3,00 €' },
-    { name: 'Brownie casero', description: 'Con helado de vainilla, nata y sopa de chocolate blanco.', price: 'Precio pendiente de confirmar' },
-    { name: 'Coulant de chocolate negro', description: 'Con helado de vainilla y nata.', price: 'Precio pendiente de confirmar' },
-    { name: 'Tarta Milka', description: 'Con helado de vainilla y dulce de leche.', price: 'Precio pendiente de confirmar' },
-    { name: 'Tarta de queso casera', description: 'Con helado de vainilla y nata. Elige el sirope.', price: 'Precio pendiente de confirmar' },
-    { name: 'Copa de helado', description: '2 bolas de vainilla, dulce de leche y nata.', price: 'Precio pendiente de confirmar' },
+    { name: 'Brownie casero', description: 'Con helado de vainilla, nata y sopa de chocolate blanco.', price: 'Consultar precio' },
+    { name: 'Coulant de chocolate negro', description: 'Con helado de vainilla y nata.', price: 'Consultar precio' },
+    { name: 'Tarta Milka', description: 'Con helado de vainilla y dulce de leche.', price: 'Consultar precio' },
+    { name: 'Tarta de queso casera', description: 'Con helado de vainilla y nata. Elige el sirope.', price: 'Consultar precio' },
+    { name: 'Copa de helado', description: '2 bolas de vainilla, dulce de leche y nata.', price: 'Consultar precio' },
   ],
   Chacinas: [
     { name: 'Chicharrón de Cádiz', price: '3,95 €' },
@@ -143,11 +149,11 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
     { name: 'Tabla serrana o tabla de quesos surtidos', price: '15,00 €' },
   ],
   'Algo ligerito': [
-    { name: 'Ensalada tropical', description: 'Con aguacate y mango.', price: 'Precio pendiente de confirmar' },
-    { name: 'Ensalada César', description: 'Con pollo crujiente y virutas de parmesano.', price: 'Precio pendiente de confirmar' },
-    { name: 'Ensaladilla del Chef', price: 'Precio pendiente de confirmar' },
+    { name: 'Ensalada tropical', description: 'Con aguacate y mango.', price: 'Consultar precio' },
+    { name: 'Ensalada César', description: 'Con pollo crujiente y virutas de parmesano.', price: 'Consultar precio' },
+    { name: 'Ensaladilla del Chef', price: 'Consultar precio' },
     { name: 'Tartar de atún fresco', description: 'Con daditos de mango y aguacate.', price: '5,95 €' },
-    { name: 'Mojama de Isla Cristina', description: 'Con AOVE.', price: 'Precio pendiente de confirmar' },
+    { name: 'Mojama de Isla Cristina', description: 'Con AOVE.', price: 'Consultar precio' },
     { name: 'Anchoa 00', description: 'Mermelada de pimientos asados sobre crujiente de centeno (2 uds).', price: '4,50 €' },
     { name: 'Salmorejo Germiná', price: '4,25 €' },
   ],
@@ -156,13 +162,13 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
     { name: 'Tataki de atún', description: 'Con coulis de soja y alga wakame.', price: '7,95 €' },
     { name: 'Pata de pulpo', description: 'Trenzado con pimentón y suave de patata.', price: '14,95 €' },
     { name: 'Chipirón plancheado', description: 'Con coulis de salsa verde.', price: 'T 4,95 € · R 8,95 €' },
-    { name: 'Tosta crujiente con tataki de presa ibérica', description: 'Con gorgonzola y tomate.', price: 'Precio pendiente de confirmar' },
+    { name: 'Tosta crujiente con tataki de presa ibérica', description: 'Con gorgonzola y tomate.', price: 'Consultar precio' },
     { name: 'Lomo de lubina plancheada', price: '9,95 €' },
     { name: 'Noodles con vegetales y gambas o pollo', price: '6,75 €' },
     { name: 'Morcilla de cebolla', description: 'Con huevo frito.', price: '4,50 €' },
     { name: 'Cazuela Germiná', description: 'Con patatas fritas, huevo y chorizo.', price: '8,50 €' },
     { name: 'Tortilla ibérica', description: 'Con salmorejo y taquitos de jamón.', price: '5,50 €' },
-    { name: 'Tortilla con salsa al brandy', price: 'Precio pendiente de confirmar' },
+    { name: 'Tortilla con salsa al brandy', price: 'Consultar precio' },
   ],
   Montaditos: [
     { name: 'Montadito de queso de cabra y salmón ahumado', price: '3,95 €' },
@@ -173,7 +179,7 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
     { name: 'Tartar de tofu', description: 'Con mango y aguacate.', price: '5,95 €' },
     { name: 'Falafel Burger Vegano 100%', price: '6,50 €' },
     { name: 'Noodles con vegetales', price: '6,25 €' },
-    { name: 'Alcachofa confitada', description: 'Con parmentier y trufa con AOVE.', price: 'Precio pendiente de confirmar' },
+    { name: 'Alcachofa confitada', description: 'Con parmentier y trufa con AOVE.', price: 'Consultar precio' },
     { name: 'Burger de alcaucil', price: '7,50 €' },
   ],
   'Nuestra bodega': [
@@ -215,17 +221,23 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
   ],
 }
 
+const populatedCartaCategories = cartaCategories.filter((category) => cartaSections[category].length > 0)
+
 const cartaCategoryNotes: Partial<Record<(typeof cartaCategories)[number], string>> = {
   'Tapas frías': 'La foto física confirma esta categoría, pero la imagen pública disponible no permite leer con fiabilidad los nombres y precios. No se han inventado.',
   Germinitos: 'Transcripción de las líneas legibles de la foto física. El nombre de la brocheta no se distingue por completo.',
 }
 
+function displayPrice(price?: string) {
+  return price || 'Consultar precio'
+}
+
 const favorites = [
-  { name: 'Pavías de merluza XXL', className: 'dish-pavias' },
-  { name: 'Croquetas caseras', className: 'dish-croquetas' },
-  { name: 'Patatas Braviolis', className: 'dish-braviolis' },
-  { name: 'Langostinos al ajillo', className: 'dish-langostinos' },
-  { name: 'Tataki de atún', className: 'dish-tataki' },
+  { name: 'Pavías de merluza XXL' },
+  { name: 'Croquetas caseras' },
+  { name: 'Patatas Braviolis' },
+  { name: 'Langostinos al ajillo' },
+  { name: 'Tataki de atún' },
 ]
 
 function saveDemo(key: string, value: unknown) {
@@ -250,9 +262,9 @@ export default function App() {
   const [preparedRequest, setPreparedRequest] = useState('')
   const [cartaCategory, setCartaCategory] = useState<(typeof cartaCategories)[number]>('De la mar...')
   const [cartaIndex, setCartaIndex] = useState(0)
+  const [tourSceneIndex, setTourSceneIndex] = useState(0)
   const [introVisible, setIntroVisible] = useState(true)
   const [introSceneIndex, setIntroSceneIndex] = useState(0)
-  const [introVideoReady, setIntroVideoReady] = useState(false)
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const reduceMotion = useReducedMotion()
 
@@ -327,7 +339,7 @@ export default function App() {
       ? Object.entries(cartaSections).flatMap(([section, sectionDishes]) =>
           sectionDishes.map((dish) => ({ ...dish, category: section })),
         ).filter((dish) => {
-          const searchable = `${dish.name} ${dish.description || ''} ${dish.price || ''}`
+          const searchable = `${dish.name} ${dish.description || ''} ${displayPrice(dish.price)}`
             .normalize('NFD')
             .replace(/[\u0300-\u036f]/g, '')
             .toLocaleLowerCase('es')
@@ -349,6 +361,7 @@ export default function App() {
     }
     const introScene = INTRO_SCENES[introSceneIndex]
     const isFinalIntroScene = introSceneIndex === INTRO_SCENES.length - 1
+    const activeTourScene = TOUR_SCENES[tourSceneIndex]
 
     return (
       <>
@@ -364,43 +377,28 @@ export default function App() {
           >
             <div className="carta-intro-light" />
             <AnimatePresence mode="wait" initial={false}>
-              {!introVideoReady && (
-                <motion.div
-                  key={introSceneIndex}
-                  className={`carta-intro-scene carta-intro-scene-${introScene.kind}`}
-                  initial={reduceMotion ? false : { opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={reduceMotion ? undefined : { opacity: 0 }}
-                  transition={{ duration: reduceMotion ? 0 : .8 }}
-                >
-                  {introScene.image && (
-                    <motion.img
-                      className="carta-intro-scene-image"
-                      src={introScene.image}
-                      alt={introScene.alt}
-                      initial={reduceMotion ? false : { scale: 1.04 }}
-                      animate={{ scale: reduceMotion ? 1 : 1.12 }}
-                      transition={{ duration: INTRO_SCENE_DURATION_MS / 1000, ease: 'linear' }}
-                    />
-                  )}
-                  <div className="carta-intro-scene-shade" />
-                </motion.div>
-              )}
+              <motion.div
+                key={introSceneIndex}
+                className={`carta-intro-scene carta-intro-scene-${introScene.kind}`}
+                initial={reduceMotion ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={reduceMotion ? undefined : { opacity: 0 }}
+                transition={{ duration: reduceMotion ? 0 : .8 }}
+              >
+                {introScene.image && (
+                  <motion.img
+                    className="carta-intro-scene-image"
+                    src={introScene.image}
+                    alt={introScene.alt}
+                    decoding="async"
+                    initial={reduceMotion ? false : { scale: 1.04 }}
+                    animate={{ scale: reduceMotion ? 1 : 1.12 }}
+                    transition={{ duration: INTRO_SCENE_DURATION_MS / 1000, ease: 'linear' }}
+                  />
+                )}
+                <div className="carta-intro-scene-shade" />
+              </motion.div>
             </AnimatePresence>
-            {!reduceMotion && (
-              <video
-                className={`carta-intro-video ${introVideoReady ? 'is-ready' : ''}`}
-                src={INTRO_VIDEO_URL}
-                autoPlay
-                muted
-                playsInline
-                preload="none"
-                onEnded={skipIntro}
-                onPlaying={() => setIntroVideoReady(true)}
-                onError={() => setIntroVideoReady(false)}
-                aria-label="Vídeo de presentación opcional del restaurante"
-              />
-            )}
             <div className="carta-intro-content">
               <motion.img
                 className="carta-intro-logo"
@@ -448,23 +446,32 @@ export default function App() {
             <p>Un recorrido solo puede enseñar los espacios que cuentan con fotografías reales verificables.</p>
           </div>
           <div className="venue-tour-panel">
-            {TOUR_SCENES.map((scene, index) => (
-              <motion.figure className="venue-tour-scene" key={scene.title} initial={reduceMotion ? false : { opacity: 0, scale: .98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: .6 }}>
-                <img src={scene.image} alt={scene.alt} loading="lazy" />
-                <figcaption><span>ESCENA {String(index + 1).padStart(2, '0')} / {String(TOUR_SCENES.length).padStart(2, '0')}</span><strong>{scene.title}</strong></figcaption>
-              </motion.figure>
-            ))}
+            {activeTourScene && (
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.figure
+                  className="venue-tour-scene"
+                  key={activeTourScene.title}
+                  initial={reduceMotion ? false : { opacity: 0, scale: .98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={reduceMotion ? undefined : { opacity: 0 }}
+                  transition={{ duration: reduceMotion ? 0 : .6 }}
+                >
+                  <img src={activeTourScene.image} alt={activeTourScene.alt} loading="lazy" decoding="async" />
+                  <figcaption><span>ESCENA {String(tourSceneIndex + 1).padStart(2, '0')} / {String(TOUR_SCENES.length).padStart(2, '0')}</span><strong>{activeTourScene.title}</strong></figcaption>
+                </motion.figure>
+              </AnimatePresence>
+            )}
             <div className="venue-tour-copy">
-              <p className="eyebrow">FACHADA Y ENTRADA</p>
-              <h2>Una casa de tapas en Sevilla Este.</h2>
-              <p>La fachada está documentada en los recursos disponibles; no hemos podido verificar imágenes del interior, la barra, las mesas o la terraza. No representamos esos espacios sin fotografías reales.</p>
-              <div className="venue-tour-progress" role="progressbar" aria-label="Progreso del recorrido" aria-valuemin={1} aria-valuemax={TOUR_SCENES.length} aria-valuenow={1}>
-                <span className="active" />
+              <p className="eyebrow">{activeTourScene?.eyebrow}</p>
+              <h2>{activeTourScene?.heading}</h2>
+              <p>{activeTourScene?.description}</p>
+              <div className="venue-tour-progress" role="progressbar" aria-label="Progreso del recorrido" aria-valuemin={1} aria-valuemax={TOUR_SCENES.length} aria-valuenow={tourSceneIndex + 1}>
+                {TOUR_SCENES.map((scene, index) => <span className={index === tourSceneIndex ? 'active' : ''} key={scene.title} />)}
               </div>
               <div className="venue-tour-controls">
-                <button type="button" disabled aria-label="Escena anterior"><ArrowLeft size={17} /></button>
-                <span>01 / 01 · Fachada</span>
-                <button type="button" disabled aria-label="Escena siguiente"><ArrowRight size={17} /></button>
+                <button type="button" disabled={tourSceneIndex === 0} onClick={() => setTourSceneIndex((index) => Math.max(0, index - 1))} aria-label="Escena anterior"><ArrowLeft size={17} /></button>
+                <span>{String(tourSceneIndex + 1).padStart(2, '0')} / {String(TOUR_SCENES.length).padStart(2, '0')} · {activeTourScene?.title}</span>
+                <button type="button" disabled={tourSceneIndex === TOUR_SCENES.length - 1} onClick={() => setTourSceneIndex((index) => Math.min(TOUR_SCENES.length - 1, index + 1))} aria-label="Escena siguiente"><ArrowRight size={17} /></button>
               </div>
               <div className="venue-tour-actions">
                 <a className="button button-primary" href="#carta-menu">Ver carta <ArrowRight size={17} /></a>
@@ -477,12 +484,12 @@ export default function App() {
         <main className="qr-menu" id="carta-menu">
           <div className="section-heading">
             <div><p className="eyebrow">CARTA DIGITAL</p><h2>ELIGE TU TENTACIÓN</h2></div>
-            <p>Transcripción de las fotos de la carta física que confirmaste como vigentes, completada con datos de la carta web. Cuando difieren, mostramos ambas referencias o marcamos el precio por confirmar; no se ha inventado información.</p>
+            <p>Consulta la carta por categorías o busca un plato. Los precios que requieren confirmación se indican como «Consultar precio».</p>
           </div>
           <div className="menu-tools carta-tools">
             <label className="search-box"><Search size={18} /><input value={query} onChange={(event) => { setCartaIndex(0); setQuery(event.target.value) }} placeholder="Buscar en toda la carta" /></label>
             <div className="category-list">
-              {cartaCategories.map((item) => (
+              {populatedCartaCategories.map((item) => (
                 <button key={item} className={!normalizedQuery && cartaCategory === item ? 'active' : ''} onClick={() => selectCartaCategory(item)} aria-pressed={!normalizedQuery && cartaCategory === item}>
                   {item}<span className="category-count">{cartaSections[item].length}</span>
                 </button>
@@ -519,7 +526,7 @@ export default function App() {
                 return (
                   <motion.button
                     type="button"
-                    key={dish.name}
+                    key={`${dish.category}-${dish.name}`}
                     className={`carta-plate ${wrappedOffset === 0 ? 'active' : ''}`}
                     onClick={() => setCartaIndex(index)}
                     tabIndex={Math.abs(wrappedOffset) > 1 ? -1 : 0}
@@ -549,18 +556,18 @@ export default function App() {
             <button className="carta-arrow carta-arrow-right" type="button" onClick={() => changeDish(1)} aria-label="Plato siguiente" disabled={cartaDishes.length < 2}><ArrowRight /></button>
           </section> : <div className="carta-no-results">{normalizedQuery ? `No hay platos que coincidan con «${query}».` : cartaCategoryNotes[cartaCategory] || 'No hay platos disponibles en esta categoría.'}</div>}
           {activeDish && (
-            <motion.article className="carta-detail" key={activeDish.name} initial={reduceMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+            <motion.article className="carta-detail" key={`${activeDish.category}-${activeDish.name}`} initial={reduceMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
               <div>
                 <p className="eyebrow">{activeDish.category}</p>
                 <h2>{activeDish.name}</h2>
                 {activeDish.description && <p>{activeDish.description}</p>}
               </div>
-              <strong>{activeDish.price || 'Precio pendiente de confirmar'}</strong>
+              <strong className="menu-price">{displayPrice(activeDish.price)}</strong>
               {activeDish.tags?.map((tag) => <span className="carta-tag" key={tag}>{tag}</span>)}
               <button type="button" onClick={() => setSelectedDish(activeDish)}>Ver ficha</button>
             </motion.article>
           )}
-          <p className="verification-note carta-verification">Las fotos de comida disponibles en la web oficial no identifican cada plato, así que no se han asignado a productos concretos. Los precios legibles transcriben las fotos y las diferencias entre la carta física y la web quedan pendientes de confirmar. Suplemento confirmado por ti: 0,60 € por mesa; una foto de la carta web muestra 0,80 € por comensal. Consulta también disponibilidad, ingredientes, alérgenos y vinos fuera de carta con el restaurante.</p>
+          <p className="verification-note carta-verification">Las fotografías específicas de los platos están pendientes de verificación. Consulta disponibilidad, ingredientes y alérgenos con el personal.</p>
         </main>
         <nav className="mobile-bar carta-mobile-bar" aria-label="Accesos rápidos de la carta">
           <a href="#carta-menu"><UtensilsCrossed size={19} /><span>Carta</span></a>
@@ -574,7 +581,7 @@ export default function App() {
               {selectedDish.image
                 ? <img src={selectedDish.image} alt={selectedDish.name} />
                 : <DishPhotoPlaceholder dishName={selectedDish.name} className="dish-modal-placeholder" />}
-              <div><small>{selectedDish.category}</small><h2>{selectedDish.name}</h2><p>{selectedDish.description}</p><strong>{selectedDish.price || 'Precio por confirmar'}</strong><p className="allergen-note">Fotografía e información pendientes de validar. Consulta alérgenos e ingredientes con el personal.</p></div>
+              <div><small>{selectedDish.category}</small><h2>{selectedDish.name}</h2>{selectedDish.description && <p>{selectedDish.description}</p>}<strong className="menu-price">{displayPrice(selectedDish.price)}</strong><p className="allergen-note">Fotografía e información pendientes de validar. Consulta alérgenos e ingredientes con el personal.</p></div>
             </motion.div>
           </div>
         )}
@@ -626,21 +633,31 @@ export default function App() {
             <h2>DE TAPEO SE COMPARTE.</h2>
             <p>Cinco tentaciones para empezar. Muchas más razones para volver.</p>
           </div>
-          <div className="table-stage">
-            <div className="tablecloth" />
-            {favorites.map((dish, index) => (
-              <motion.div
-                key={dish.name}
-                className={`floating-dish ${dish.className}`}
-                initial={reduceMotion ? false : { opacity: 0, x: index % 2 ? 220 : -220, rotate: index % 2 ? 8 : -8 }}
-                whileInView={{ opacity: 1, x: 0, rotate: 0 }}
-                viewport={{ once: true, amount: .4 }}
-                transition={{ duration: .9, delay: index * .12 }}
-              >
-                <DishPhotoPlaceholder dishName={dish.name} />
-                <span>{dish.name}</span>
-              </motion.div>
-            ))}
+          <div className="featured-menu-stage">
+            <div className="featured-menu-board">
+              <div className="featured-menu-copy">
+                <p className="eyebrow">SELECCIÓN DE LA CARTA</p>
+                <h3>Cinco formas de empezar.</h3>
+                <p>Las fotografías auténticas de estos platos están pendientes de recibir y verificar.</p>
+              </div>
+              <div className="featured-menu-list" role="list" aria-label="Platos destacados sin fotografía asignada">
+                {favorites.map((dish, index) => (
+                  <motion.div
+                    className="featured-menu-item"
+                    role="listitem"
+                    key={dish.name}
+                    initial={reduceMotion ? false : { opacity: 0, x: 18 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, amount: .4 }}
+                    transition={{ duration: .5, delay: index * .08 }}
+                  >
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <strong>{dish.name}</strong>
+                    <ChevronRight size={17} aria-hidden="true" />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           </div>
           <a className="button button-dark" href="/carta">Descubre nuestra carta <ArrowRight size={18} /></a>
         </section>
@@ -665,7 +682,7 @@ export default function App() {
               <p className="eyebrow">CARTA DIGITAL</p>
               <h2>NUESTROS FAVORITOS</h2>
             </div>
-            <p>Consulta disponibilidad y ingredientes directamente en el restaurante. Precios pendientes de confirmar: compruébalos antes de publicar.</p>
+            <p>Consulta disponibilidad, ingredientes y precios vigentes directamente con el restaurante.</p>
           </div>
           <div className="menu-tools">
             <label className="search-box">
@@ -691,7 +708,7 @@ export default function App() {
                   <small>{dish.category}</small>
                   <h3>{dish.name}</h3>
                   <p>{dish.description}</p>
-                  <strong>{dish.price || 'Precio por confirmar'}</strong>
+                  <strong className="menu-price">{displayPrice(dish.price)}</strong>
                 </div>
               </motion.button>
             ))}
@@ -711,7 +728,7 @@ export default function App() {
           <div className="reservation-panel">
             <p className="eyebrow">RESERVAS</p>
             <h2>¿NOS VEMOS EN UNA MESA?</h2>
-            <p>Completa la solicitud o llama directamente. La demo no confirma disponibilidad real.</p>
+            <p>Esta demo guarda los datos solo en este navegador: no los envía al restaurante ni confirma una reserva. Llama para gestionar la solicitud.</p>
             <form onSubmit={(event) => submitDemo(event, 'maria-germina-reservation')}>
               <div className="form-grid">
                 <label>Nombre<input name="name" required placeholder="Tu nombre" /></label>
@@ -721,7 +738,7 @@ export default function App() {
                 <label>Comensales<input name="guests" required type="number" min="1" placeholder="2" /></label>
                 <label>Observaciones<textarea name="notes" placeholder="Alergias o preferencias" /></label>
               </div>
-              <button className="button button-primary" type="submit">Enviar solicitud <ArrowRight size={18} /></button>
+              <button className="button button-primary" type="submit">Guardar solicitud local <ArrowRight size={18} /></button>
             </form>
           </div>
           <a className="call-card" href={PHONE_LINK}>
@@ -750,7 +767,8 @@ export default function App() {
               </label>
               <label className="full">Comentarios<textarea name="comments" /></label>
             </div>
-            <button className="button button-dark" type="submit">Consultar grupo <ArrowRight size={18} /></button>
+            <p className="demo-notice">La consulta se guarda solo en este navegador; no se envía al restaurante ni confirma disponibilidad.</p>
+            <button className="button button-dark" type="submit">Guardar consulta local <ArrowRight size={18} /></button>
           </form>
         </section>
 
@@ -769,8 +787,8 @@ export default function App() {
             <h2>SEVILLA ESTE TIENE SU BAR DE TAPAS.</h2>
             <p><MapPin size={19} /> Local 9, Calle Flor de Albahaca, 1 · 41020 Sevilla</p>
             <p><Phone size={19} /> <a href={PHONE_LINK}>{PHONE}</a></p>
-            <p><Clock3 size={19} /> Horario publicado como referencia: martes–sábado 12:00–00:00 · domingo 12:00–17:00 · lunes cerrado. Confirmar antes de publicar.</p>
-            <p className="verification-note">Dirección publicada como referencia. Verificar el número exacto y horario con el establecimiento.</p>
+            <p><Clock3 size={19} /> Horario publicado como referencia: martes–sábado 12:00–00:00 · domingo 12:00–17:00 · lunes cerrado. Consulta el horario actualizado con el establecimiento.</p>
+            <p className="verification-note">Dirección y horario publicados como referencia; confirma los detalles vigentes antes de desplazarte.</p>
             <div className="contact-actions">
               <a className="button button-primary" href={MAPS_LINK} target="_blank" rel="noreferrer">Cómo llegar <MapPin size={18} /></a>
               <a className="button button-ghost-dark" href={INSTAGRAM} target="_blank" rel="noreferrer">Instagram</a>
@@ -812,8 +830,8 @@ export default function App() {
             <div>
               <small>{selectedDish.category}</small>
               <h2>{selectedDish.name}</h2>
-              <p>{selectedDish.description}</p>
-              <strong>{selectedDish.price || 'Precio por confirmar'}</strong>
+              {selectedDish.description && <p>{selectedDish.description}</p>}
+              <strong className="menu-price">{displayPrice(selectedDish.price)}</strong>
               <p className="allergen-note">Información de alérgenos e ingredientes disponible consultando al personal.</p>
             </div>
           </motion.div>
