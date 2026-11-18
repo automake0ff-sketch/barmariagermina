@@ -163,10 +163,15 @@ footer > a:last-child { display: flex; align-items: center; gap: 8px; font-size:
 .carta-intro::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(20,21,17,.88), rgba(20,21,17,.32) 52%, rgba(20,21,17,.65)); }
 .carta-intro-light { position: absolute; width: 70vw; height: 70vw; border-radius: 50%; background: radial-gradient(circle, rgba(210,179,126,.18), transparent 68%); animation: intro-breathe 4s ease-in-out infinite; }
 .carta-intro-venue, .carta-intro-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.72); }
+.carta-intro-venue { transform-origin: 50% 58%; animation: carta-intro-arrive 3.4s cubic-bezier(.2,.72,.2,1) both; will-change: transform; }
 .carta-intro-logo { position: relative; z-index: 2; width: min(460px, 76vw); max-height: 270px; object-fit: contain; filter: drop-shadow(0 18px 30px rgba(0,0,0,.28)); }
 .carta-intro p { position: relative; z-index: 2; margin: 0; font-size: 10px; letter-spacing: 4px; }
 .carta-intro button { position: absolute; z-index: 3; right: 24px; bottom: 24px; border: 1px solid rgba(255,255,255,.55); background: transparent; color: white; border-radius: 30px; padding: 10px 16px; text-transform: uppercase; letter-spacing: 1px; font-size: 10px; cursor: pointer; }
 @keyframes intro-breathe { 50% { transform: scale(1.08); opacity: .7; } }
+@keyframes carta-intro-arrive {
+  from { transform: scale(1.16) translateY(2%); filter: saturate(.72) brightness(.68); }
+  to { transform: scale(1.02); filter: saturate(.82) brightness(.94); }
+}
 .carta-brand-logo { width: 58px; height: 58px; object-fit: contain; padding: 3px; background: #fff; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; }
 .carta-tools { align-items: flex-end; }
 .carta-3d { height: 430px; position: relative; display: grid; place-items: center; perspective: 1150px; overflow: hidden; border-radius: 4px; background: radial-gradient(ellipse at 50% 78%, rgba(142,93,56,.24), transparent 42%), linear-gradient(135deg, rgba(255,250,241,.7), rgba(203,189,157,.42)); touch-action: pan-y; }

@@ -46,7 +46,18 @@ const cartaCategories = [
 
 const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
   'Tapas frías': [],
-  Germinitos: [],
+  Germinitos: [
+    { name: 'Anchoa y salmorejo', price: '2,50 €' },
+    { name: 'Anchoa y queso de cabra', price: '2,50 €' },
+    { name: 'Pincho de pollo', price: '2,50 €' },
+    { name: 'Queso de cabra y cebolla caramelizada', price: '2,50 €' },
+    { name: 'Bocadito de calamares en pan bao', price: '2,75 €' },
+    { name: 'Brocheta (nombre parcialmente ilegible en la foto)', price: '2,50 €' },
+    { name: 'Pollo con salsa caramelizada al PX', price: '2,50 €' },
+    { name: 'Mini Germiná', price: '2,50 €' },
+    { name: 'Queso cabrales con sardina ahumada', price: '2,50 €' },
+    { name: 'Presa y miel', price: '2,50 €' },
+  ],
   'Menú infantil': [
     { name: 'Solomillo de pollo crujiente con patatas y huevo frito', price: '3,75 €' },
     { name: 'Pinchito de pollo', price: '3,95 €' },
@@ -55,13 +66,12 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
     { name: 'Burguer con queso', description: 'Con patatas fritas.', price: '4,95 €' },
   ],
   'De la mar...': [
+    { name: 'CangreBurger auténtica', price: '5,00 €' },
     { name: 'Lomo de bacalao confitado', description: 'A baja temperatura con piperrada.', price: '3,75 €' },
     { name: 'Pavía de gambones', price: '3,75 €' },
-    { name: 'Pavía de merluza de pintxo', price: 'Foto física 3,75 € · carta web 4,75 € (confirmar)' },
-    { name: 'Pulpo braseado', description: 'Con virutas de patata.', price: 'Foto física 5,75 € · carta web 7,50 € (confirmar)' },
+    { name: 'Pavía de merluza de pintxo', price: '4,75 €' },
+    { name: 'Pulpo braseado', description: 'Con virutas de patata.', price: '7,50 €' },
     { name: 'Langostinos al ajillo a nuestro estilo', price: '3,75 €' },
-    { name: 'Tartar de langostinos salteados con miel', price: '3,50 €' },
-    { name: 'CangreBurger auténtica', price: '5,00 €' },
     { name: 'Langostinos tenderete', price: '4,50 €' },
   ],
   'De la freidora': [
@@ -195,7 +205,7 @@ const cartaSections: Record<(typeof cartaCategories)[number], Dish[]> = {
 
 const cartaCategoryNotes: Partial<Record<(typeof cartaCategories)[number], string>> = {
   'Tapas frías': 'La foto física confirma esta categoría, pero los nombres y precios no se leen con fiabilidad en la imagen disponible.',
-  Germinitos: 'La foto física confirma esta categoría, pero los nombres y precios no se leen con fiabilidad en la imagen disponible.',
+  Germinitos: 'Transcripción de las líneas legibles de la foto física. El nombre de la brocheta no se distingue por completo.',
 }
 
 const favorites = [
@@ -443,7 +453,7 @@ export default function App() {
               <button type="button" onClick={() => setSelectedDish(activeDish)}>Ver ficha</button>
             </motion.article>
           )}
-          <p className="verification-note carta-verification">No se han asociado fotos de plato porque no se pudo verificar que representen cada producto. Los precios legibles transcriben las fotos y las diferencias entre la carta física y la web quedan pendientes de confirmar. El suplemento aparece como 0,60 € por mesa en la foto física y 0,80 € por comensal en la carta web; no se resuelve esa discrepancia. Consulta también disponibilidad, ingredientes, alérgenos y vinos fuera de carta con el restaurante.</p>
+          <p className="verification-note carta-verification">No se han asociado fotos de plato porque no se pudo verificar que representen cada producto. Los precios legibles transcriben las fotos y las diferencias entre la carta física y la web quedan pendientes de confirmar. Suplemento confirmado por ti: 0,60 € por mesa; una foto de la carta web muestra 0,80 € por comensal. Consulta también disponibilidad, ingredientes, alérgenos y vinos fuera de carta con el restaurante.</p>
         </main>
         {selectedDish && (
           <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={() => setSelectedDish(null)}>
