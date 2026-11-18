@@ -10,12 +10,13 @@ const PHONE_LINK = 'tel:+34854705167'
 const MAPS_LINK = 'https://www.google.com/maps/search/?api=1&query=Maria+Germina+Tapas+Calle+Flor+de+Albahaca+1+Sevilla'
 const INSTAGRAM = 'https://www.instagram.com/mariagerminatapa/'
 const INTRO_VIDEO_URL = '/videos/maria-germina-intro.mp4'
-const INTRO_SCENE_DURATION_MS = 3000
-const INTRO_DURATION_MS = INTRO_SCENE_DURATION_MS * 3
+const INTRO_SCENE_DURATION_MS = 2500
+const INTRO_DURATION_MS = INTRO_SCENE_DURATION_MS * 4
 const INTRO_SCENES = [
-  { image: '/images/1.jpg', alt: 'Fachada y entrada publicada en la web oficial', kicker: 'SEVILLA ESTE', title: 'María Germiná' },
-  { image: '/images/2.jpg', alt: 'Fotografía gastronómica del sitio oficial; el plato no está identificado', kicker: 'SABORES PARA COMPARTIR', title: 'Gastronomía de la casa' },
-  { image: null, alt: '', kicker: 'CARTA DIGITAL', title: 'Descubre nuestra carta' },
+  { kind: 'facade', image: '/images/1.jpg', alt: 'Fachada y entrada publicada en la web oficial', kicker: 'SEVILLA ESTE', title: 'María Germiná' },
+  { kind: 'ambience', image: null, alt: '', kicker: 'AMBIENTE VIBRANTE Y ANIMADO', title: 'El alma de Sevilla Este' },
+  { kind: 'gastronomy', image: '/images/2.jpg', alt: 'Fotografía gastronómica del sitio oficial; el plato no está identificado', kicker: 'TAPAS AUTÉNTICAS Y SABROSAS', title: 'Platos que conquistan' },
+  { kind: 'endcard', image: null, alt: '', kicker: 'CARTA DIGITAL', title: 'Descubre nuestra carta' },
 ] as const
 
 const TOUR_SCENES = [
@@ -366,7 +367,7 @@ export default function App() {
               {!introVideoReady && (
                 <motion.div
                   key={introSceneIndex}
-                  className={`carta-intro-scene ${introScene.image ? '' : 'carta-intro-endcard'}`}
+                  className={`carta-intro-scene carta-intro-scene-${introScene.kind}`}
                   initial={reduceMotion ? false : { opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={reduceMotion ? undefined : { opacity: 0 }}
@@ -561,6 +562,11 @@ export default function App() {
           )}
           <p className="verification-note carta-verification">Las fotos de comida disponibles en la web oficial no identifican cada plato, así que no se han asignado a productos concretos. Los precios legibles transcriben las fotos y las diferencias entre la carta física y la web quedan pendientes de confirmar. Suplemento confirmado por ti: 0,60 € por mesa; una foto de la carta web muestra 0,80 € por comensal. Consulta también disponibilidad, ingredientes, alérgenos y vinos fuera de carta con el restaurante.</p>
         </main>
+        <nav className="mobile-bar carta-mobile-bar" aria-label="Accesos rápidos de la carta">
+          <a href="#carta-menu"><UtensilsCrossed size={19} /><span>Carta</span></a>
+          <a href={PHONE_LINK}><Phone size={19} /><span>Llamar</span></a>
+          <a href={MAPS_LINK} target="_blank" rel="noreferrer"><MapPin size={19} /><span>Cómo llegar</span></a>
+        </nav>
         {selectedDish && (
           <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={() => setSelectedDish(null)}>
             <motion.div className="dish-modal" initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} onClick={(event) => event.stopPropagation()}>

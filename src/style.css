@@ -164,14 +164,16 @@ footer > a:last-child { display: flex; align-items: center; gap: 8px; font-size:
 .verification-note { color: #777466; font-size: 11px; line-height: 1.5; }
 .qr-header { height: 76px; display: flex; align-items: center; justify-content: space-between; padding: 10px 5.5%; background: var(--ink); color: white; position: sticky; top: 0; z-index: 20; }
 .qr-header .nav-reserve { color: white; }
-.qr-menu { min-height: calc(100vh - 76px); padding: 70px 5% 90px; background: var(--cream); overflow-x: clip; }
+.qr-menu { min-height: calc(100vh - 76px); padding: 70px 5% 90px; background: var(--cream); overflow-x: clip; scroll-margin-top: 76px; }
 .carta-intro { position: fixed; z-index: 200; inset: 0; display: grid; place-items: center; background: radial-gradient(circle at 50% 45%, #3d4032 0, #24251f 58%, #171814 100%); color: white; overflow: hidden; }
 .carta-intro::after { content: ''; position: absolute; z-index: 2; inset: 0; pointer-events: none; background: linear-gradient(0deg, rgba(20,21,17,.82), rgba(20,21,17,.22) 50%, rgba(20,21,17,.6)); }
 .carta-intro-light { position: absolute; z-index: 2; width: 70vw; height: 70vw; border-radius: 50%; background: radial-gradient(circle, rgba(210,179,126,.18), transparent 68%); animation: intro-breathe 4s ease-in-out infinite; pointer-events: none; }
 .carta-intro-scene { position: absolute; z-index: 0; inset: 0; overflow: hidden; background: radial-gradient(circle at 50% 45%, #51533e, #20201d 72%); }
 .carta-intro-scene-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 58%; filter: saturate(.78); }
 .carta-intro-scene-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,21,17,.22), rgba(20,21,17,.08) 50%, rgba(20,21,17,.34)); }
-.carta-intro-endcard { background: radial-gradient(circle at 50% 42%, #4a4b39, #24251f 62%, #171814); }
+.carta-intro-scene-ambience { background: radial-gradient(ellipse at 18% 82%, rgba(189,90,61,.38), transparent 38%), radial-gradient(ellipse at 82% 18%, rgba(185,157,107,.32), transparent 34%), linear-gradient(135deg, #66704a, #2e3027 52%, #20201d); }
+.carta-intro-scene-ambience::before { content: ''; position: absolute; inset: -35%; background: linear-gradient(115deg, transparent 38%, rgba(255,250,241,.12) 48%, transparent 58%); transform: rotate(-8deg); }
+.carta-intro-scene-endcard { background: radial-gradient(circle at 50% 42%, #4a4b39, #24251f 62%, #171814); }
 .carta-intro-video { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.8); opacity: 0; transition: opacity .55s ease; }
 .carta-intro-video.is-ready { opacity: 1; }
 .carta-intro-content { position: relative; z-index: 3; display: grid; justify-items: center; gap: 16px; width: min(720px, 90vw); padding: 32px 18px; text-align: center; }
@@ -265,6 +267,9 @@ footer > a:last-child { display: flex; align-items: center; gap: 8px; font-size:
   .dish-grid { grid-template-columns: repeat(3, 1fr); }
   .inclusive-section { grid-template-columns: 1fr 1fr; }
   .inclusive-section .button { grid-column: 2; justify-self: start; }
+  .venue-tour-heading { display: block; }
+  .venue-tour-heading h1 { font-size: clamp(36px, 5vw, 52px); }
+  .venue-tour-heading > p:last-child { margin: 12px 0 0; }
   .venue-tour-panel { grid-template-columns: 1fr 1fr; }
 }
 
@@ -342,6 +347,7 @@ footer > a:last-child { display: flex; align-items: center; gap: 8px; font-size:
   .qr-header .brand strong { font-size: 13px; }
   .qr-header .nav-reserve { display: flex; padding: 10px; font-size: 10px; }
   .qr-menu { padding: 52px 12px 70px; }
+  .qr-menu { scroll-margin-top: 68px; }
   .carta-tools { display: block; }
   .venue-tour { padding: 62px 12px 68px; }
   .venue-tour-heading { display: block; margin-bottom: 22px; }
