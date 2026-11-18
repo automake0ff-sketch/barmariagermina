@@ -154,6 +154,11 @@ footer > a:last-child { display: flex; align-items: center; gap: 8px; font-size:
 .mobile-bar { display: none; }
 .toast { position: fixed; z-index: 80; right: 20px; bottom: 20px; max-width: 390px; display: flex; align-items: center; gap: 14px; background: var(--ink); color: white; border-left: 4px solid var(--terracotta); padding: 14px 16px; box-shadow: 0 12px 40px rgba(0,0,0,.22); font-size: 13px; }
 .toast button { border: 0; background: none; color: white; cursor: pointer; }
+.toast-copy { border: 1px solid rgba(255,255,255,.35) !important; padding: 7px 9px; white-space: nowrap; }
+.verification-note { color: #777466; font-size: 11px; line-height: 1.5; }
+.qr-header { height: 76px; display: flex; align-items: center; justify-content: space-between; padding: 10px 5.5%; background: var(--ink); color: white; position: sticky; top: 0; z-index: 20; }
+.qr-header .nav-reserve { color: white; }
+.qr-menu { min-height: calc(100vh - 76px); padding: 70px 5% 90px; background: var(--cream); }
 .modal-backdrop { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(25,24,20,.72); backdrop-filter: blur(8px); }
 .dish-modal { width: min(760px, 94vw); max-height: 82vh; display: grid; grid-template-columns: 52% 48%; position: relative; background: var(--paper); box-shadow: 0 30px 80px rgba(0,0,0,.32); }
 .dish-modal > img { width: 100%; height: 100%; min-height: 430px; object-fit: cover; }

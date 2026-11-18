@@ -52,10 +52,15 @@ export default function App() {
   const [category, setCategory] = useState('Todas')
   const [selectedDish, setSelectedDish] = useState<Dish | null>(null)
   const [notice, setNotice] = useState('')
+  const [preparedRequest, setPreparedRequest] = useState('')
   const reduceMotion = useReducedMotion()
 
   useEffect(() => {
     document.documentElement.style.scrollBehavior = 'smooth'
+    const path = window.location.pathname
+    if (path !== '/' && !path.startsWith('/carta')) {
+      window.history.replaceState({}, '', '/')
+    }
   }, [])
 
   const categories = useMemo(
@@ -73,8 +78,63 @@ export default function App() {
     event.preventDefault()
     const data = Object.fromEntries(new FormData(event.currentTarget).entries())
     saveDemo(key, data)
+    const summary = Object.entries(data)
+      .map(([label, value]) => `${label}: ${String(value || '-')}`)
+      .join('\n')
+    setPreparedRequest(summary)
     event.currentTarget.reset()
-    setNotice('Solicitud registrada localmente en esta demo. No constituye una reserva real.')
+    setNotice('Solicitud preparada y guardada localmente. No se ha enviado al restaurante.')
+  }
+
+  const copyPreparedRequest = async () => {
+    if (!preparedRequest) return
+    await navigator.clipboard.writeText(preparedRequest)
+    setNotice('Datos copiados para llamar o enviar por el canal elegido por el cliente.')
+  }
+
+  const isCartaRoute = typeof window !== 'undefined' && window.location.pathname.startsWith('/carta')
+  if (isCartaRoute) {
+    return (
+      <>
+        <header className="qr-header">
+          <a className="brand" href="/" aria-label="Volver al inicio">
+            <span className="brand-mark">MG</span>
+            <span><strong>MARÍA GERMINÁ</strong><small>CARTA DIGITAL</small></span>
+          </a>
+          <a className="nav-reserve" href={PHONE_LINK}><Phone size={17} /> Llamar</a>
+        </header>
+        <main className="qr-menu">
+          <div className="section-heading">
+            <div><p className="eyebrow">CARTA DIGITAL</p><h2>NUESTROS FAVORITOS</h2></div>
+            <p>Precios e información pendientes de confirmar con el restaurante.</p>
+          </div>
+          <div className="menu-tools">
+            <label className="search-box"><Search size={18} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar en la carta" /></label>
+            <div className="category-list">
+              {categories.map((item) => <button key={item} className={category === item ? 'active' : ''} onClick={() => setCategory(item)}>{item}</button>)}
+            </div>
+          </div>
+          <div className="dish-grid">
+            {filteredDishes.map((dish) => (
+              <button className="dish-card" key={dish.name} onClick={() => setSelectedDish(dish)}>
+                <div className="dish-image"><img src={dish.image} alt={dish.name} />{dish.tags?.map((tag) => <span key={tag}>{tag}</span>)}</div>
+                <div className="dish-card-copy"><small>{dish.category}</small><h3>{dish.name}</h3><p>{dish.description}</p><strong>{dish.price || 'Precio por confirmar'}</strong></div>
+              </button>
+            ))}
+          </div>
+          <p className="verification-note">Las fotografías son material de referencia y deben validarse antes de publicar. Consulta alérgenos e ingredientes con el personal.</p>
+        </main>
+        {selectedDish && (
+          <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={() => setSelectedDish(null)}>
+            <motion.div className="dish-modal" initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} onClick={(event) => event.stopPropagation()}>
+              <button className="modal-close" onClick={() => setSelectedDish(null)} aria-label="Cerrar"><X /></button>
+              <img src={selectedDish.image} alt={selectedDish.name} />
+              <div><small>{selectedDish.category}</small><h2>{selectedDish.name}</h2><p>{selectedDish.description}</p><strong>{selectedDish.price || 'Precio por confirmar'}</strong><p className="allergen-note">Fotografía e información pendientes de validar. Consulta alérgenos e ingredientes con el personal.</p></div>
+            </motion.div>
+          </div>
+        )}
+      </>
+    )
   }
 
   return (
@@ -86,7 +146,7 @@ export default function App() {
         </a>
         <nav className={menuOpen ? 'nav-links open' : 'nav-links'} aria-label="Principal">
           <a href="#casa" onClick={() => setMenuOpen(false)}>Nuestra casa</a>
-          <a href="#carta" onClick={() => setMenuOpen(false)}>Carta</a>
+          <a href="/carta" onClick={() => setMenuOpen(false)}>Carta</a>
           <a href="#experiencia" onClick={() => setMenuOpen(false)}>Experiencia</a>
           <a href="#grupos" onClick={() => setMenuOpen(false)}>Grupos</a>
           <a href="#contacto" onClick={() => setMenuOpen(false)}>Contacto</a>
@@ -105,7 +165,7 @@ export default function App() {
             <h1>EL BUEN <em>TAPEo</em><br />TIENE NOMBRE PROPIO.</h1>
             <p className="hero-lead">Sabores que sorprenden, ambiente de barrio y buenos momentos en María Germiná.</p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#carta">Ver carta <ArrowRight size={18} /></a>
+              <a className="button button-primary" href="/carta">Ver carta <ArrowRight size={18} /></a>
               <a className="button button-ghost" href="#reservas">Reservar mesa</a>
             </div>
           </motion.div>
@@ -137,7 +197,7 @@ export default function App() {
               </motion.div>
             ))}
           </div>
-          <a className="button button-dark" href="#carta">Descubre nuestra carta <ArrowRight size={18} /></a>
+          <a className="button button-dark" href="/carta">Descubre nuestra carta <ArrowRight size={18} /></a>
         </section>
 
         <section className="house-section" id="casa">
@@ -160,7 +220,7 @@ export default function App() {
               <p className="eyebrow">CARTA DIGITAL</p>
               <h2>NUESTROS FAVORITOS</h2>
             </div>
-            <p>Consulta disponibilidad y ingredientes directamente en el restaurante.</p>
+            <p>Consulta disponibilidad y ingredientes directamente en el restaurante. Precios pendientes de confirmar: compruébalos antes de publicar.</p>
           </div>
           <div className="menu-tools">
             <label className="search-box">
@@ -194,7 +254,7 @@ export default function App() {
             <h2>CADA PERSONA TIENE SU FORMA DE DISFRUTAR.</h2>
           </div>
           <p>Consulta por opciones vegetales, platos con tofu e información sobre ingredientes y alérgenos. Ante cualquier alergia o intolerancia, confirma siempre con el personal.</p>
-          <a className="button button-light" href="mailto:hola@barmariagerminatapassevillaeste.shop?subject=Consulta alimentaria">Consulta tus necesidades <ArrowRight size={18} /></a>
+          <a className="button button-light" href={PHONE_LINK}>Consulta tus necesidades <ArrowRight size={18} /></a>
         </section>
 
         <section className="reservations-section" id="reservas">
@@ -259,7 +319,8 @@ export default function App() {
             <h2>SEVILLA ESTE TIENE SU BAR DE TAPAS.</h2>
             <p><MapPin size={19} /> Local 9, Calle Flor de Albahaca, 1 · 41020 Sevilla</p>
             <p><Phone size={19} /> <a href={PHONE_LINK}>{PHONE}</a></p>
-            <p><Clock3 size={19} /> Martes–sábado: 12:00–00:00 · Domingo: 12:00–17:00 · Lunes cerrado</p>
+            <p><Clock3 size={19} /> Horario publicado como referencia: martes–sábado 12:00–00:00 · domingo 12:00–17:00 · lunes cerrado. Confirmar antes de publicar.</p>
+            <p className="verification-note">Dirección publicada como referencia. Verificar el número exacto y horario con el establecimiento.</p>
             <div className="contact-actions">
               <a className="button button-primary" href={MAPS_LINK} target="_blank" rel="noreferrer">Cómo llegar <MapPin size={18} /></a>
               <a className="button button-ghost-dark" href={INSTAGRAM} target="_blank" rel="noreferrer">Instagram</a>
@@ -278,12 +339,18 @@ export default function App() {
       </footer>
 
       <div className="mobile-bar">
-        <a href="#carta"><UtensilsCrossed size={19} /><span>Carta</span></a>
+        <a href="/carta"><UtensilsCrossed size={19} /><span>Carta</span></a>
         <a href={PHONE_LINK}><Phone size={19} /><span>Llamar</span></a>
         <a href={MAPS_LINK} target="_blank" rel="noreferrer"><MapPin size={19} /><span>Cómo llegar</span></a>
       </div>
 
-      {notice && <div className="toast" role="status"><span>{notice}</span><button onClick={() => setNotice('')} aria-label="Cerrar"><X size={16} /></button></div>}
+      {notice && (
+        <div className="toast" role="status">
+          <span>{notice}</span>
+          {preparedRequest && <button className="toast-copy" onClick={copyPreparedRequest}>Copiar datos</button>}
+          <button onClick={() => setNotice('')} aria-label="Cerrar"><X size={16} /></button>
+        </div>
+      )}
 
       {selectedDish && (
         <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={() => setSelectedDish(null)}>
